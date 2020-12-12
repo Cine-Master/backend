@@ -19,7 +19,7 @@ public class Room {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
     private List<Show> shows;
 
     public Long getId() {

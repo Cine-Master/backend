@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Entity
-@Table(name = "mocc")
+@Table(name = "show_table")
 public class Show {
 
     @Id
@@ -16,7 +16,7 @@ public class Show {
     @Column(name = "id")
     private Long id;
 
-    @Size(min = 1, max = 20, message = "The name length must be between 1 and 20")
+    @Size(min = 1, max = 100, message = "The name length must be between 1 and 100")
     @Pattern(regexp = "[\\w -\\.,:;\\+_\\(\\)\\[\\]\\{\\}]+", message = "The name must follow the pattern [a-zA-Z0-9 -.,:;+()[]{}]")
     @Column(name = "name", nullable = false)
     private String name;
@@ -43,9 +43,9 @@ public class Show {
     @Size(min = 1, max = 50, message = "The location length must be between 7 and 255")
     @Pattern(regexp = "[\\w ]+", message = "The location must be composed only by letters, numbers and spaces")
     @Column(name = "production_location")
-    private String production_location;
+    private String productionLocation;
 
-    @Size(min = 1, max = 100, message = "The language length must be between 7 and 255")
+    @Size(min = 1, max = 100, message = "The description length must be between 1 and 1000")
     @Pattern(regexp = "[\\w -\\.,:;\\+_\\(\\)\\[\\]\\{\\}]+", message = "The description must follow the pattern [a-zA-Z0-9 -.,:;+()[]{}]")
     @Column(name = "description")
     private String description;
@@ -137,12 +137,12 @@ public class Show {
         this.language = language;
     }
 
-    public String getProduction_location() {
-        return production_location;
+    public String getProductionLocation() {
+        return productionLocation;
     }
 
-    public void setProduction_location(String production_location) {
-        this.production_location = production_location;
+    public void setProductionLocation(String production_location) {
+        this.productionLocation = production_location;
     }
 
     public String getDescription() {

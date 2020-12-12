@@ -20,7 +20,7 @@ public class Director {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "directors")
+    @ManyToMany(mappedBy = "directors", fetch = FetchType.EAGER)
     private List<Show> shows;
 
     public Long getId() {

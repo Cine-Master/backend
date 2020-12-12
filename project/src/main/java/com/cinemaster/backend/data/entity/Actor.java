@@ -20,7 +20,7 @@ public class Actor {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "actors")
+    @ManyToMany(mappedBy = "actors", fetch = FetchType.EAGER)
     private List<Show> shows;
 
     public Long getId() {
