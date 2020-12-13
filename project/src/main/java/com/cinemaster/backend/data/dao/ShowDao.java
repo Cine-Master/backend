@@ -8,9 +8,6 @@ import java.util.List;
 
 public interface ShowDao extends JpaRepository<Show, Long>, JpaSpecificationExecutor<Show> {
 
-    List<Show> findAllByName(String name);
-
-    // TODO da controllare
-    List<Show> findAllByCategories(String... categories);
+    List<Show> findAllByNameContains(String name);
 
 }

@@ -19,5 +19,4 @@ public interface ActorService {
     List<ActorDto> findAll();
 
     List<ActorDto> findAllByNameContains(String name);
-
 }

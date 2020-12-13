@@ -19,7 +19,7 @@ public class AdminServiceTest {
     AdminService adminService;
 
     @Test
-    public void testCheckAdminCredentials() {
+    public void testAdminService() {
         Admin admin = new Admin();
         admin.setUsername("admin");
         admin.setHashedPassword("admin");

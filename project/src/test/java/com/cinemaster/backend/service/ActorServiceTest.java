@@ -42,7 +42,6 @@ public class ActorServiceTest {
         List<Actor> actors = actorService.findAllByNameContains("Ciccio").stream().map(actorDto -> modelMapper.map(actorDto, Actor.class)).collect(Collectors.toList());
         actor = actors.get(0);
         actor.setName("Francesco Riccio");
-        System.out.println(actor.getId());
         actorService.update(actor);
 
         actors = actorService.findAllByNameContains("Ciccio").stream().map(actorDto -> modelMapper.map(actorDto, Actor.class)).collect(Collectors.toList());

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +37,21 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
+    public Optional<DirectorDto> findById(Long id) {
+        Optional<Director> optional = directorDao.findById(id);
+        if (optional.isPresent()) {
+            return optional.map(director -> modelMapper.map(director, DirectorDto.class));
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<DirectorDto> findAll() {
         return directorDao.findAll().stream().map(director -> modelMapper.map(director, DirectorDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DirectorDto> findAllByNameContains(String name) {
+        return directorDao.findAllByNameContains(name).stream().map(director -> modelMapper.map(director, DirectorDto.class)).collect(Collectors.toList());
     }
 }

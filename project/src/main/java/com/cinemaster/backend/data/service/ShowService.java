@@ -1,11 +1,10 @@
 package com.cinemaster.backend.data.service;
 
-import com.cinemaster.backend.data.dto.RoomDto;
 import com.cinemaster.backend.data.dto.ShowDto;
-import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.entity.Show;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShowService {
 
@@ -15,10 +14,11 @@ public interface ShowService {
 
     void delete(Show show);
 
+    Optional<ShowDto> findById(Long id);
+
     List<ShowDto> findAll();
 
-    List<ShowDto> findAllByName(String name);
+    List<ShowDto> findAllByNameContains(String name);
 
-    // TODO check
-    List<ShowDto> findAllByCategories(String... categories);
+    List<ShowDto> findAllByCategoriesNames(String... categories);
 }

@@ -4,6 +4,7 @@ import com.cinemaster.backend.data.dto.DirectorDto;
 import com.cinemaster.backend.data.entity.Director;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DirectorService {
 
@@ -13,5 +14,9 @@ public interface DirectorService {
 
     void delete(Director director);
 
+    Optional<DirectorDto> findById(Long id);
+
     List<DirectorDto> findAll();
+
+    List<DirectorDto> findAllByNameContains(String name);
 }
