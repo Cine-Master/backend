@@ -21,10 +21,17 @@ public class LoginController {
 
     @PostMapping("")
     public ResponseEntity login(@RequestBody Credentials credentials, @CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse httpServletResponse) {
-        System.out.println(sessionId);
+        String username = CookieMap.getInstance().getMap().get(sessionId);
+        if (username != null) {
+            return ResponseEntity.ok(username);
+        }
         if (adminService.checkAdminCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword())).isPresent()) {
-            httpServletResponse.addCookie(new Cookie("sessionid", Integer.toString(new Random().nextInt())));
-            return ResponseEntity.ok("admin\n" + sessionId);
+            String cookieString = DigestUtils.sha256Hex(Integer.toString(new Random().nextInt()));
+            CookieMap.getInstance().getMap().put(cookieString, credentials.getUsername());
+            Cookie cookie = new Cookie("sessionid", cookieString);
+            cookie.setHttpOnly(true);
+            httpServletResponse.addCookie(cookie);
+            return ResponseEntity.ok("admin\n" + cookie);
         } else {
             throw new WrongCredentialsException();
         }
