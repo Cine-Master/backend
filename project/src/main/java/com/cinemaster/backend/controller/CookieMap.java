@@ -1,11 +1,13 @@
 package com.cinemaster.backend.controller;
 
+import com.cinemaster.backend.data.dto.AccountDto;
+
 import java.util.HashMap;
 
 public class CookieMap {
 
     private static CookieMap instance;
-    private HashMap<String, String> map;
+    private HashMap<String, AccountDto> map;
 
     private CookieMap() {
         map = new HashMap<>();
@@ -18,7 +20,7 @@ public class CookieMap {
         return instance;
     }
 
-    public HashMap<String, String> getMap() {
+    public HashMap<String, AccountDto> getMap() {
         return map;
     }
 }

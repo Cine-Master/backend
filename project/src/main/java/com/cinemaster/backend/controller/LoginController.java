@@ -1,7 +1,9 @@
 package com.cinemaster.backend.controller;
 
 import com.cinemaster.backend.core.exception.WrongCredentialsException;
-import com.cinemaster.backend.data.service.AdminService;
+import com.cinemaster.backend.data.dto.AccountDto;
+import com.cinemaster.backend.data.dto.AdminDto;
+import com.cinemaster.backend.data.service.AccountService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import java.util.Random;
 
 @RestController
@@ -17,24 +20,34 @@ import java.util.Random;
 public class LoginController {
 
     @Autowired
-    private AdminService adminService;
+    private AccountService accountService;
 
     @PostMapping("")
     public ResponseEntity login(@RequestBody Credentials credentials, @CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse httpServletResponse) {
-        String username = CookieMap.getInstance().getMap().get(sessionId);
-        if (username != null) {
-            return ResponseEntity.ok(username);
+        AccountDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null) {
+            if (accountDto instanceof AdminDto) {
+                AdminDto adminDto = (AdminDto) accountDto;
+                return ResponseEntity.ok(adminDto);
+            }
         }
-        if (adminService.checkAdminCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword())).isPresent()) {
+        Optional<AccountDto> optional = accountService.checkCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword()));
+        if (optional.isPresent()) {
             String cookieString = DigestUtils.sha256Hex(Integer.toString(new Random().nextInt()));
-            CookieMap.getInstance().getMap().put(cookieString, credentials.getUsername());
             Cookie cookie = new Cookie("sessionid", cookieString);
             cookie.setHttpOnly(true);
             httpServletResponse.addCookie(cookie);
-            return ResponseEntity.ok("admin\n" + cookie);
+            AccountDto dto = optional.get();
+            if (dto instanceof AdminDto) {
+                AdminDto adminDto = (AdminDto) dto;
+                CookieMap.getInstance().getMap().put(cookieString, adminDto);
+                return ResponseEntity.ok(adminDto);
+            }
+            // else if user ecc
         } else {
             throw new WrongCredentialsException();
         }
+        return null;
     }
 
 }

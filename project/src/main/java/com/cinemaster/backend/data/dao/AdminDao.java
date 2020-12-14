@@ -7,7 +7,4 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Optional;
 
 public interface AdminDao extends JpaRepository<Admin, Long>, JpaSpecificationExecutor<Admin> {
-
-    Optional<Admin> findByUsernameAndHashedPassword(String username, String hashedPassword);
-
 }

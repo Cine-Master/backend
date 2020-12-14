@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         ActorServiceTest.class,
-        AdminServiceTest.class,
+        AccountServiceTest.class,
         CategoryServiceTest.class,
         DirectorServiceTest.class,
         RoomServiceTest.class,

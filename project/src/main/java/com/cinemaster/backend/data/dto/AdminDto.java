@@ -1,34 +1,15 @@
 package com.cinemaster.backend.data.dto;
 
-public class AdminDto {
 
-    private Long id;
+public class AdminDto extends AccountDto {
 
-    private String username;
+    private String type = "ADMIN";
 
-    private String hashedPassword;
-
-    public Long getId() {
-        return id;
+    public String getType() {
+        return type;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setType(String type) {
+        this.type = type;
     }
 }
