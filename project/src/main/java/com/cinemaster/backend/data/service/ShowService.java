@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface ShowService {
 
-    void save(Show show);
+    void save(ShowDto showDto);
 
-    void update(Show show);
+    void update(ShowDto showDto);
 
-    void delete(Show show);
+    void delete(ShowDto showDto);
 
     Optional<ShowDto> findById(Long id);
 

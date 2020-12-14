@@ -1,10 +1,5 @@
 package com.cinemaster.backend.data.dto;
 
-import com.cinemaster.backend.data.entity.Actor;
-import com.cinemaster.backend.data.entity.Category;
-import com.cinemaster.backend.data.entity.Director;
-import com.cinemaster.backend.data.entity.Room;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -31,13 +26,13 @@ public class ShowDto {
 
     private Boolean comingSoon;
 
-    private Room room;
+    private RoomDto room;
 
-    private List<Category> categories;
+    private List<CategoryDto> categories;
 
-    private List<Director> directors;
+    private List<DirectorDto> directors;
 
-    private List<Actor> actors;
+    private List<ActorDto> actors;
 
     public Long getId() {
         return id;
@@ -119,35 +114,35 @@ public class ShowDto {
         this.comingSoon = comingSoon;
     }
 
-    public Room getRoom() {
+    public RoomDto getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public void setRoom(RoomDto room) {
         this.room = room;
     }
 
-    public List<Category> getCategories() {
+    public List<CategoryDto> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<CategoryDto> categories) {
         this.categories = categories;
     }
 
-    public List<Director> getDirectors() {
+    public List<DirectorDto> getDirectors() {
         return directors;
     }
 
-    public void setDirectors(List<Director> directors) {
+    public void setDirectors(List<DirectorDto> directors) {
         this.directors = directors;
     }
 
-    public List<Actor> getActors() {
+    public List<ActorDto> getActors() {
         return actors;
     }
 
-    public void setActors(List<Actor> actors) {
+    public void setActors(List<ActorDto> actors) {
         this.actors = actors;
     }
 }

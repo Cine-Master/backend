@@ -1,8 +1,7 @@
 package com.cinemaster.backend.service;
 
+import com.cinemaster.backend.data.dto.CategoryDto;
 import com.cinemaster.backend.data.dto.ShowDto;
-import com.cinemaster.backend.data.entity.Category;
-import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.CategoryService;
 import com.cinemaster.backend.data.service.ShowService;
 import org.junit.Assert;
@@ -31,7 +30,7 @@ public class ShowServiceTest {
 
     @Test
     public void testShow() {
-        Show show = new Show();
+        ShowDto show = new ShowDto();
         show.setName("Guardiani della Galassia");
         show.setComingSoon(false);
         showService.save(show);
@@ -45,24 +44,24 @@ public class ShowServiceTest {
         shows = showService.findAllByNameContains("Avengers");
         Assert.assertEquals(1, shows.size());
 
-        Category action = new Category();
+        CategoryDto action = new CategoryDto();
         action.setName("Azione");
         categoryService.save(action);
 
-        Category adventure = new Category();
+        CategoryDto adventure = new CategoryDto();
         adventure.setName("Avventura");
         categoryService.save(adventure);
 
-        Category fantasy = new Category();
+        CategoryDto fantasy = new CategoryDto();
         fantasy.setName("Fantasy");
         categoryService.save(fantasy);
 
-        Show show2 = new Show();
+        ShowDto show2 = new ShowDto();
         show2.setName("Guardiani della Galassia");
         show2.setComingSoon(false);
         showService.save(show2);
 
-        Show show3 = new Show();
+        ShowDto show3 = new ShowDto();
         show3.setName("Harry Potter");
         show3.setComingSoon(false);
         showService.save(show3);

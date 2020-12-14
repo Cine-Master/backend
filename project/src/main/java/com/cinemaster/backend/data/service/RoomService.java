@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface RoomService {
 
-    void save(Room room);
+    void save(RoomDto roomDto);
 
-    void update(Room room);
+    void update(RoomDto roomDto);
 
-    void delete(Room room);
+    void delete(RoomDto roomDto);
 
     Optional<RoomDto> findById(Long id);
 

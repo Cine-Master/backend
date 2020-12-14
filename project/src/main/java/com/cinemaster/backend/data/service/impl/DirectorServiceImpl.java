@@ -22,17 +22,21 @@ public class DirectorServiceImpl implements DirectorService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(Director director) {
+    public void save(DirectorDto directorDto) {
+        Director director = modelMapper.map(directorDto, Director.class);
+        directorDao.saveAndFlush(director);
+        directorDto.setId(director.getId());
+    }
+
+    @Override
+    public void update(DirectorDto directorDto) {
+        Director director = modelMapper.map(directorDto, Director.class);
         directorDao.saveAndFlush(director);
     }
 
     @Override
-    public void update(Director director) {
-        directorDao.saveAndFlush(director);
-    }
-
-    @Override
-    public void delete(Director director) {
+    public void delete(DirectorDto directorDto) {
+        Director director = modelMapper.map(directorDto, Director.class);
         directorDao.delete(director);
     }
 

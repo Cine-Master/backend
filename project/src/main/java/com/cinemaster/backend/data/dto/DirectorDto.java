@@ -1,7 +1,5 @@
 package com.cinemaster.backend.data.dto;
 
-import com.cinemaster.backend.data.entity.Show;
-
 import java.util.List;
 
 public class DirectorDto {
@@ -10,7 +8,7 @@ public class DirectorDto {
 
     private String name;
 
-    private List<Show> shows;
+    private List<ShowDto> shows;
 
     public Long getId() {
         return id;
@@ -28,11 +26,11 @@ public class DirectorDto {
         this.name = name;
     }
 
-    public List<Show> getShows() {
+    public List<ShowDto> getShows() {
         return shows;
     }
 
-    public void setShows(List<Show> shows) {
+    public void setShows(List<ShowDto> shows) {
         this.shows = shows;
     }
 }

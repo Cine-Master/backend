@@ -22,17 +22,21 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(Category category) {
+    public void save(CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
+        categoryDao.saveAndFlush(category);
+        categoryDto.setId(category.getId());
+    }
+
+    @Override
+    public void update(CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
         categoryDao.saveAndFlush(category);
     }
 
     @Override
-    public void update(Category category) {
-        categoryDao.saveAndFlush(category);
-    }
-
-    @Override
-    public void delete(Category category) {
+    public void delete(CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
         categoryDao.delete(category);
     }
 

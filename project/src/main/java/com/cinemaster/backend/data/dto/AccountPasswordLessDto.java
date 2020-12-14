@@ -1,12 +1,10 @@
 package com.cinemaster.backend.data.dto;
 
-public abstract class AccountDto {
+public abstract class AccountPasswordLessDto {
 
     private Long id;
 
     private String username;
-
-    private String hashedPassword;
 
     public Long getId() {
         return id;
@@ -24,11 +22,4 @@ public abstract class AccountDto {
         this.username = username;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
 }

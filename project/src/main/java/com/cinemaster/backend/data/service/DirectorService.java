@@ -1,18 +1,17 @@
 package com.cinemaster.backend.data.service;
 
 import com.cinemaster.backend.data.dto.DirectorDto;
-import com.cinemaster.backend.data.entity.Director;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DirectorService {
 
-    void save(Director director);
+    void save(DirectorDto directorDto);
 
-    void update(Director director);
+    void update(DirectorDto directorDto);
 
-    void delete(Director director);
+    void delete(DirectorDto directorDto);
 
     Optional<DirectorDto> findById(Long id);
 

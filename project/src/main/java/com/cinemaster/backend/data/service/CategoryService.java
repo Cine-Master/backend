@@ -1,18 +1,17 @@
 package com.cinemaster.backend.data.service;
 
 import com.cinemaster.backend.data.dto.CategoryDto;
-import com.cinemaster.backend.data.entity.Category;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
 
-    void save(Category category);
+    void save(CategoryDto categoryDto);
 
-    void update(Category category);
+    void update(CategoryDto categoryDto);
 
-    void delete(Category category);
+    void delete(CategoryDto categoryDto);
 
     Optional<CategoryDto> findById(Long id);
 

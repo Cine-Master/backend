@@ -22,17 +22,21 @@ public class ActorServiceImpl implements ActorService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(Actor actor) {
+    public void save(ActorDto actorDto) {
+        Actor actor = modelMapper.map(actorDto, Actor.class);
+        actorDao.saveAndFlush(actor);
+        actorDto.setId(actor.getId());
+    }
+
+    @Override
+    public void update(ActorDto actorDto) {
+        Actor actor = modelMapper.map(actorDto, Actor.class);
         actorDao.saveAndFlush(actor);
     }
 
     @Override
-    public void update(Actor actor) {
-        actorDao.saveAndFlush(actor);
-    }
-
-    @Override
-    public void delete(Actor actor) {
+    public void delete(ActorDto actorDto) {
+        Actor actor = modelMapper.map(actorDto, Actor.class);
         actorDao.delete(actor);
     }
 

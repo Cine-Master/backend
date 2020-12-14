@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface ActorService {
 
-    void save(Actor actor);
+    void save(ActorDto actorDto);
 
-    void update(Actor actor);
+    void update(ActorDto actorDto);
 
-    void delete(Actor actor);
+    void delete(ActorDto actorDto);
 
     Optional<ActorDto> findById(Long id);
 

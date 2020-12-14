@@ -1,8 +1,8 @@
 package com.cinemaster.backend.service;
 
-import com.cinemaster.backend.data.dto.AccountDto;
+import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminDto;
-import com.cinemaster.backend.data.entity.Admin;
+import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.service.AccountService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,14 +26,14 @@ public class AccountServiceTest {
 
     @Test
     public void testAdminService() {
-        Admin admin = new Admin();
-        admin.setUsername("admin");
-        admin.setHashedPassword("admin");
-        accountService.save(admin);
+        AdminDto adminDto = new AdminDto();
+        adminDto.setUsername("adminDto");
+        adminDto.setHashedPassword("adminDto");
+        accountService.save(adminDto);
 
-        Optional<AccountDto> dto = accountService.checkCredentials("admin", "admin");
+        Optional<AccountPasswordLessDto> dto = accountService.checkCredentials("adminDto", "adminDto");
         if (dto.isPresent()) {
-            Assert.assertTrue(dto.get() instanceof AdminDto);
+            Assert.assertTrue(dto.get() instanceof AdminPasswordLessDto);
         } else {
             assert false;
         }

@@ -29,17 +29,21 @@ public class ShowServiceImpl implements ShowService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(Show show) {
+    public void save(ShowDto showDto) {
+        Show show = modelMapper.map(showDto, Show.class);
+        showDao.saveAndFlush(show);
+        showDto.setId(show.getId());
+    }
+
+    @Override
+    public void update(ShowDto showDto) {
+        Show show = modelMapper.map(showDto, Show.class);
         showDao.saveAndFlush(show);
     }
 
     @Override
-    public void update(Show show) {
-        showDao.saveAndFlush(show);
-    }
-
-    @Override
-    public void delete(Show show) {
+    public void delete(ShowDto showDto) {
+        Show show = modelMapper.map(showDto, Show.class);
         showDao.delete(show);
     }
 

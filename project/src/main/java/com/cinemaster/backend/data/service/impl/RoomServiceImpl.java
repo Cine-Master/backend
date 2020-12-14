@@ -22,17 +22,21 @@ public class RoomServiceImpl implements RoomService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(Room room) {
+    public void save(RoomDto roomDto) {
+        Room room = modelMapper.map(roomDto, Room.class);
+        roomDao.saveAndFlush(room);
+        roomDto.setId(room.getId());
+    }
+
+    @Override
+    public void update(RoomDto roomDto) {
+        Room room = modelMapper.map(roomDto, Room.class);
         roomDao.saveAndFlush(room);
     }
 
     @Override
-    public void update(Room room) {
-        roomDao.saveAndFlush(room);
-    }
-
-    @Override
-    public void delete(Room room) {
+    public void delete(RoomDto roomDto) {
+        Room room = modelMapper.map(roomDto, Room.class);
         roomDao.delete(room);
     }
 

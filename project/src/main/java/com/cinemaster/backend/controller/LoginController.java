@@ -1,8 +1,8 @@
 package com.cinemaster.backend.controller;
 
 import com.cinemaster.backend.core.exception.WrongCredentialsException;
-import com.cinemaster.backend.data.dto.AccountDto;
-import com.cinemaster.backend.data.dto.AdminDto;
+import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
+import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.service.AccountService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +24,22 @@ public class LoginController {
 
     @PostMapping("")
     public ResponseEntity login(@RequestBody Credentials credentials, @CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse httpServletResponse) {
-        AccountDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null) {
-            if (accountDto instanceof AdminDto) {
-                AdminDto adminDto = (AdminDto) accountDto;
+            if (accountDto instanceof AdminPasswordLessDto) {
+                AdminPasswordLessDto adminDto = (AdminPasswordLessDto) accountDto;
                 return ResponseEntity.ok(adminDto);
             }
         }
-        Optional<AccountDto> optional = accountService.checkCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword()));
+        Optional<AccountPasswordLessDto> optional = accountService.checkCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword()));
         if (optional.isPresent()) {
             String cookieString = DigestUtils.sha256Hex(Integer.toString(new Random().nextInt()));
             Cookie cookie = new Cookie("sessionid", cookieString);
             cookie.setHttpOnly(true);
             httpServletResponse.addCookie(cookie);
-            AccountDto dto = optional.get();
-            if (dto instanceof AdminDto) {
-                AdminDto adminDto = (AdminDto) dto;
+            AccountPasswordLessDto dto = optional.get();
+            if (dto instanceof AdminPasswordLessDto) {
+                AdminPasswordLessDto adminDto = (AdminPasswordLessDto) dto;
                 CookieMap.getInstance().getMap().put(cookieString, adminDto);
                 return ResponseEntity.ok(adminDto);
             }

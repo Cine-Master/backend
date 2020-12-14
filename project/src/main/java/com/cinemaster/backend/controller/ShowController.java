@@ -1,10 +1,9 @@
 package com.cinemaster.backend.controller;
 
 import com.cinemaster.backend.core.exception.ForbiddenException;
-import com.cinemaster.backend.data.dto.AccountDto;
-import com.cinemaster.backend.data.dto.AdminDto;
+import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
+import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.dto.ShowDto;
-import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.ShowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,10 @@ public class ShowController {
 
     @PostMapping("/add")
     public ResponseEntity showAdd(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse httpServletResponse) {
-        AccountDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-        if (accountDto != null && accountDto instanceof AdminDto) {
-            Show show = modelMapper.map(showDto, Show.class);
-            showService.save(show);
-            return ResponseEntity.ok(show);
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
+            showService.save(showDto);
+            return ResponseEntity.ok(showDto);
         } else {
             throw new ForbiddenException();
         }

@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
         CategoryServiceTest.class,
         DirectorServiceTest.class,
         RoomServiceTest.class,
-        ShowServiceTest.class,
+//        ShowServiceTest.class,
 })
 class BackendApplicationTests {
 }
