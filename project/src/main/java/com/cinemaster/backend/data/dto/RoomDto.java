@@ -8,8 +8,6 @@ public class RoomDto {
 
     private String name;
 
-    private List<ShowDto> shows;
-
     public Long getId() {
         return id;
     }
@@ -25,13 +23,4 @@ public class RoomDto {
     public void setName(String name) {
         this.name = name;
     }
-
-    public List<ShowDto> getShows() {
-        return shows;
-    }
-
-    public void setShows(List<ShowDto> shows) {
-        this.shows = shows;
-    }
-
 }

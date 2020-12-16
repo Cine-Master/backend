@@ -5,30 +5,30 @@ import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.service.ShowService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-
 @RestController
 @RequestMapping(path = "/admin/shows")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class ShowController {
+public class AdminShowController {
 
     @Autowired
     private ShowService showService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-//    @GetMapping("")
-//    public ResponseEntity showList() {
-//    }
+    @GetMapping("")
+    public ResponseEntity showList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
+            return ResponseEntity.ok(showService.findAll());
+        } else {
+            throw new ForbiddenException();
+        }
+    }
 
     @PostMapping("/add")
-    public ResponseEntity showAdd(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId, HttpServletResponse httpServletResponse) {
+    public ResponseEntity showAdd(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             showService.save(showDto);
@@ -38,6 +38,8 @@ public class ShowController {
         }
     }
 
+
+    // TODO: business logic, how to manage
 //    @GetMapping("/edit")
 //    public ResponseEntity showEdit() {
 //    }

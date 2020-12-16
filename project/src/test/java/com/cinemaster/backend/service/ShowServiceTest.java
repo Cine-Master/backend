@@ -4,6 +4,7 @@ import com.cinemaster.backend.data.dto.CategoryDto;
 import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.service.CategoryService;
 import com.cinemaster.backend.data.service.ShowService;
+import com.cinemaster.backend.data.specification.ShowSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,10 +39,10 @@ public class ShowServiceTest {
         show.setName("The Avengers");
         showService.update(show);
 
-        List<ShowDto> shows = showService.findAllByNameContains("Guardiani");
+        List<ShowDto> shows = showService.findAllByFilter(new ShowSpecification.Filter("Guardiani"));
         Assert.assertEquals(0, shows.size());
 
-        shows = showService.findAllByNameContains("Avengers");
+        shows = showService.findAllByFilter(new ShowSpecification.Filter("the"));
         Assert.assertEquals(1, shows.size());
 
         CategoryDto action = new CategoryDto();
@@ -72,12 +73,12 @@ public class ShowServiceTest {
 
         show.getCategories().add(action);
         showService.update(show);
-        shows = showService.findAllByCategoriesNames(action.getName());
+        shows = showService.findAllByFilter(new ShowSpecification.Filter(null, action.getName()));
         Assert.assertEquals(1, shows.size());
 
         show.getCategories().add(adventure);
         showService.update(show);
-        shows = showService.findAllByCategoriesNames(adventure.getName());
+        shows = showService.findAllByFilter(new ShowSpecification.Filter(null, adventure.getName()));
         Assert.assertEquals(1, shows.size());
 
         show2.getCategories().add(adventure);
@@ -86,13 +87,13 @@ public class ShowServiceTest {
         show3.getCategories().add(fantasy);
         showService.update(show3);
 
-        shows = showService.findAllByCategoriesNames(adventure.getName());
+        shows = showService.findAllByFilter(new ShowSpecification.Filter(null, adventure.getName()));
         Assert.assertEquals(2, shows.size());
 
-        shows = showService.findAllByCategoriesNames(action.getName(), fantasy.getName());
+        shows = showService.findAllByFilter(new ShowSpecification.Filter(null, action.getName(), fantasy.getName()));
         Assert.assertEquals(2, shows.size());
 
-        shows = showService.findAllByCategoriesNames(adventure.getName(), fantasy.getName());
+        shows = showService.findAllByFilter(new ShowSpecification.Filter(null, adventure.getName(), fantasy.getName()));
         Assert.assertEquals(3, shows.size());
 
         showService.delete(show);

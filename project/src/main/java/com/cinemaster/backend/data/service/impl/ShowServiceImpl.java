@@ -5,13 +5,12 @@ import com.cinemaster.backend.data.dao.ShowDao;
 import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.ShowService;
+import com.cinemaster.backend.data.specification.ShowSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,23 +62,7 @@ public class ShowServiceImpl implements ShowService {
 
     @Override
     @Transactional
-    public List<ShowDto> findAllByNameContains(String name) {
-        return showDao.findAllByNameContains(name).stream().map(show -> modelMapper.map(show, ShowDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public List<ShowDto> findAllByCategoriesNames(String... categories) {
-        List<ShowDto> dto = new ArrayList<>();
-
-        List<Show> shows = showDao.findAll();
-        shows.forEach(show -> show.getCategories().forEach(category -> {
-            if (Arrays.stream(categories).anyMatch(category.getName()::contains)) {
-                dto.add(modelMapper.map(show, ShowDto.class));
-                return;
-            }
-        }));
-
-        return dto;
+    public List<ShowDto> findAllByFilter(ShowSpecification.Filter filter) {
+        return showDao.findAll(ShowSpecification.findAllByFilter(filter)).stream().map(show -> modelMapper.map(show, ShowDto.class)).collect(Collectors.toList());
     }
 }

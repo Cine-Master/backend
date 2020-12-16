@@ -1,7 +1,7 @@
 package com.cinemaster.backend.data.service;
 
 import com.cinemaster.backend.data.dto.ShowDto;
-import com.cinemaster.backend.data.entity.Show;
+import com.cinemaster.backend.data.specification.ShowSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,5 @@ public interface ShowService {
 
     List<ShowDto> findAll();
 
-    List<ShowDto> findAllByNameContains(String name);
-
-    List<ShowDto> findAllByCategoriesNames(String... categories);
+    List<ShowDto> findAllByFilter(ShowSpecification.Filter filter);
 }
