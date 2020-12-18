@@ -3,6 +3,7 @@ package com.cinemaster.backend.data.service.impl;
 import com.cinemaster.backend.data.dao.DirectorDao;
 import com.cinemaster.backend.data.dto.DirectorDto;
 import com.cinemaster.backend.data.entity.Director;
+import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.DirectorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,14 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void delete(DirectorDto directorDto) {
-        Director director = modelMapper.map(directorDto, Director.class);
-        directorDao.delete(director);
+        Optional<Director> optional = directorDao.findById(directorDto.getId());
+        if (optional.isPresent()) {
+            Director director = optional.get();
+            for (Show show : director.getShows()) {
+                show.getDirectors().remove(director);
+            }
+            directorDao.delete(director);
+        }
     }
 
     @Override

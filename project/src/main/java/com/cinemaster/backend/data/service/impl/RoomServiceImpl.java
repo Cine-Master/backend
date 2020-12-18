@@ -2,11 +2,15 @@ package com.cinemaster.backend.data.service.impl;
 
 import com.cinemaster.backend.data.dao.RoomDao;
 import com.cinemaster.backend.data.dto.RoomDto;
+import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.entity.Room;
+import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.RoomService;
+import com.cinemaster.backend.data.service.ShowService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +21,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private RoomDao roomDao;
+
+    @Autowired
+    private ShowService showService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -35,9 +42,16 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public void delete(RoomDto roomDto) {
-        Room room = modelMapper.map(roomDto, Room.class);
-        roomDao.delete(room);
+        Optional<Room> optional = roomDao.findById(roomDto.getId());
+        if (optional.isPresent()) {
+            Room room = optional.get();
+            for (Show show : room.getShows()) {
+                showService.delete(modelMapper.map(show, ShowDto.class));
+            }
+            roomDao.delete(room);
+        }
     }
 
     @Override

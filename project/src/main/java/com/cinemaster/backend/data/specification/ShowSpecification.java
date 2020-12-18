@@ -30,7 +30,11 @@ public class ShowSpecification {
         private List<String> categories;
 
         public Filter(String name, String... categories) {
-            this.name = name == null ? null : name.toLowerCase();
+            if (name == null) {
+                this.name = null;
+            } else {
+                this.name = name.toLowerCase();
+            }
             this.categories = new ArrayList<>();
             if (categories != null) {
                 for (String category : categories) {

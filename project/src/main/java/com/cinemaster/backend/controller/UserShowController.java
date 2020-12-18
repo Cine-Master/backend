@@ -20,7 +20,6 @@ public class UserShowController {
     }
 
 
-    //TODO vediamo un po' (perché non passare direttamente gli id delle categorie dato che le facciamo via checkbox)
     @GetMapping("/search")
     public ResponseEntity showListByName(
             @RequestParam(value = "name", required = false) String name,

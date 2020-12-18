@@ -4,37 +4,37 @@ import com.cinemaster.backend.core.exception.ForbiddenException;
 import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
-import com.cinemaster.backend.data.dto.RoomDto;
-import com.cinemaster.backend.data.service.RoomService;
+import com.cinemaster.backend.data.dto.DirectorDto;
+import com.cinemaster.backend.data.service.DirectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/admin/rooms")
+@RequestMapping(path = "/admin/directors")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class AdminRoomController {
+public class AdminDirectorController {
 
     @Autowired
-    private RoomService roomService;
+    private DirectorService directorService;
 
     @GetMapping("")
-    public ResponseEntity roomList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity directorList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            return ResponseEntity.ok(roomService.findAll());
+            return ResponseEntity.ok(directorService.findAll());
         } else {
             throw new ForbiddenException();
         }
     }
 
     @PostMapping("")
-    public ResponseEntity roomAdd(@RequestBody RoomDto roomDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity directorAdd(@RequestBody DirectorDto directorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             try {
-                roomService.save(roomDto);
-                return ResponseEntity.ok(roomDto);
+                directorService.save(directorDto);
+                return ResponseEntity.ok(directorDto);
             } catch (RuntimeException e) {
                 throw new InvalidDataException();
             }
@@ -43,14 +43,13 @@ public class AdminRoomController {
         }
     }
 
-    // TODO: business logic, how to manage (same as show)
     @PutMapping("")
-    public ResponseEntity roomEdit(@RequestBody RoomDto roomDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity directorEdit(@RequestBody DirectorDto directorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             try {
-                roomService.update(roomDto);
-                return ResponseEntity.ok(roomDto);
+                directorService.update(directorDto);
+                return ResponseEntity.ok(directorDto);
             } catch (RuntimeException e) {
                 throw new InvalidDataException();
             }
@@ -60,18 +59,13 @@ public class AdminRoomController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity roomDelete(@RequestBody RoomDto roomDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity directorDelete(@RequestBody DirectorDto directorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            try {
-                roomService.delete(roomDto);
-                return ResponseEntity.ok("Successfully deleted");
-            } catch (RuntimeException e) {
-                throw new InvalidDataException();
-            }
+            directorService.delete(directorDto);
+            return ResponseEntity.ok("Successfully deleted");
         } else {
             throw new ForbiddenException();
         }
     }
-
 }

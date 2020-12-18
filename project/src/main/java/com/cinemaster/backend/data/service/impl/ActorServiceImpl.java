@@ -3,10 +3,12 @@ package com.cinemaster.backend.data.service.impl;
 import com.cinemaster.backend.data.dao.ActorDao;
 import com.cinemaster.backend.data.dto.ActorDto;
 import com.cinemaster.backend.data.entity.Actor;
+import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.ActorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +37,16 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
+    @Transactional
     public void delete(ActorDto actorDto) {
-        Actor actor = modelMapper.map(actorDto, Actor.class);
-        actorDao.delete(actor);
+        Optional<Actor> optional = actorDao.findById(actorDto.getId());
+        if (optional.isPresent()) {
+            Actor actor = optional.get();
+            for (Show show : actor.getShows()) {
+                show.getActors().remove(actor);
+            }
+            actorDao.delete(actor);
+        }
     }
 
     @Override

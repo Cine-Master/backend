@@ -1,0 +1,27 @@
+AGGIUNTA SPETTACOLO
+/admin/shows/add
+
+{
+    "name": "Avengers Endgame",
+    "photoUrl": null,
+    "date": "2020-12-28",
+    "startTime": "20:00",
+    "endTime": "23:00",
+    "language": "Italiano",
+    "productionLocation": "USA",
+    "comingSoon": false,
+    "description": "E' un bellissimo film, Iron Man muore",
+    "room": null,
+    "categories": [
+        {"id": 1},
+        {"id": 27}
+    ],
+    "directors": [
+        {"id": 23},
+        {"id": 19}
+    ],
+    "actors": [
+        {"id": 22},
+        {"id": 26}
+    ]
+}

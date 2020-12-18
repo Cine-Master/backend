@@ -3,10 +3,12 @@ package com.cinemaster.backend.data.service.impl;
 import com.cinemaster.backend.data.dao.CategoryDao;
 import com.cinemaster.backend.data.dto.CategoryDto;
 import com.cinemaster.backend.data.entity.Category;
+import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +37,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void delete(CategoryDto categoryDto) {
-        Category category = modelMapper.map(categoryDto, Category.class);
-        categoryDao.delete(category);
+        Optional<Category> optional = categoryDao.findById(categoryDto.getId());
+        if (optional.isPresent()) {
+            Category category = optional.get();
+            for (Show show : category.getShows()) {
+                show.getCategories().remove(category);
+            }
+            categoryDao.delete(category);
+        }
     }
 
     @Override
