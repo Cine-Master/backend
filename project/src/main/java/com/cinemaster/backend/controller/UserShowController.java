@@ -1,6 +1,7 @@
 package com.cinemaster.backend.controller;
 
 import com.cinemaster.backend.data.service.ShowService;
+import com.cinemaster.backend.data.specification.ShowSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,25 +21,17 @@ public class UserShowController {
 
 
     //TODO vediamo un po' (perché non passare direttamente gli id delle categorie dato che le facciamo via checkbox)
-//    @GetMapping("/search")
-//    public ResponseEntity showListByName(
-//            @RequestParam(value = "name", required = false) String name,
-//            @RequestParam(value = "category", required = false) String category) {
-//        if (name != null) {
-//            return ResponseEntity.ok(showService.findAllByNameContains(name));
-//        } else if (category != null) {
-//            return ResponseEntity.ok(showService.findAllByCategoriesNames(category));
-//        }
-//    }
+    @GetMapping("/search")
+    public ResponseEntity showListByName(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "category", required = false) String[] categories) {
+        return ResponseEntity.ok(showService.findAllByFilter(new ShowSpecification.Filter(name, categories)));
+    }
 
-//    @GetMapping("")
-//    public ResponseEntity showDetails(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
-//        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-//        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-//            return ResponseEntity.ok(showService.findAll());
-//        } else {
-//            throw new ForbiddenException();
-//        }
-//    }
+    @GetMapping("/details")
+    public ResponseEntity showDetails(
+            @RequestParam(value = "id", required = true) Long id) {
+        return ResponseEntity.ok(showService.findById(id));
+    }
 
 }

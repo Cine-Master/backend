@@ -96,6 +96,12 @@ public class ShowServiceTest {
         shows = showService.findAllByFilter(new ShowSpecification.Filter(null, adventure.getName(), fantasy.getName()));
         Assert.assertEquals(3, shows.size());
 
+        shows = showService.findAllByFilter(new ShowSpecification.Filter("Harry", adventure.getName()));
+        Assert.assertEquals(0, shows.size());
+
+        shows = showService.findAllByFilter(new ShowSpecification.Filter("Potter", adventure.getName(), fantasy.getName()));
+        Assert.assertEquals(1, shows.size());
+
         showService.delete(show);
         showService.delete(show2);
         showService.delete(show3);

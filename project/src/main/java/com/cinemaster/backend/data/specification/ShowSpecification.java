@@ -21,7 +21,7 @@ public class ShowSpecification {
                 ListJoin<Show, Category> listJoin = root.joinList("categories");
                 predicate = criteriaBuilder.and(predicate, listJoin.get("name").in(filter.categories));
             }
-            return criteriaQuery.where(predicate).getRestriction();
+            return criteriaQuery.where(predicate).distinct(true).getRestriction();
         };
     }
 
@@ -32,8 +32,10 @@ public class ShowSpecification {
         public Filter(String name, String... categories) {
             this.name = name == null ? null : name.toLowerCase();
             this.categories = new ArrayList<>();
-            for (String category : categories) {
-                this.categories.add(category);
+            if (categories != null) {
+                for (String category : categories) {
+                    this.categories.add(category);
+                }
             }
         }
     }

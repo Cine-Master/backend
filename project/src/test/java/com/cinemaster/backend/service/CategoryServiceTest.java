@@ -42,7 +42,7 @@ public class CategoryServiceTest {
         categoryDto.setName("Avventura");
         categoryService.update(categoryDto);
 
-        categories = categoryService.findAllByNameContains("Azione");
+        categories = categoryService.findAllByNameContains("azione");
         Assert.assertEquals(0, categories.size());
 
         categories = categoryService.findAllByNameContains("Avventura");
