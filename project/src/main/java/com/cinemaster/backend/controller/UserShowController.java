@@ -1,10 +1,14 @@
 package com.cinemaster.backend.controller;
 
+import com.cinemaster.backend.core.exception.ShowNotFoundException;
+import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.service.ShowService;
 import com.cinemaster.backend.data.specification.ShowSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/shows")
@@ -30,7 +34,12 @@ public class UserShowController {
     @GetMapping("/details")
     public ResponseEntity showDetails(
             @RequestParam(value = "id", required = true) Long id) {
-        return ResponseEntity.ok(showService.findById(id));
+        Optional<ShowDto> optional = showService.findById(id);
+        if (optional.isPresent()) {
+            return ResponseEntity.ok(showService.findById(id));
+        } else {
+            throw new ShowNotFoundException();
+        }
     }
 
 }
