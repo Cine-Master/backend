@@ -22,7 +22,7 @@ public class LogoutController {
                 .maxAge(0)
                 .build();
         httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok("successfully logout");
+        return ResponseEntity.ok("successfully logged out");
     }
 
 }
