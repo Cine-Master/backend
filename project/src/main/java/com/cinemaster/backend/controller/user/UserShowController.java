@@ -1,4 +1,4 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.user;
 
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
 import com.cinemaster.backend.data.dto.ShowDto;

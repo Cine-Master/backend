@@ -1,5 +1,6 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.admin;
 
+import com.cinemaster.backend.controller.CookieMap;
 import com.cinemaster.backend.core.exception.ForbiddenException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;

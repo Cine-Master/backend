@@ -1,6 +1,5 @@
 package com.cinemaster.backend.data.dto;
 
-import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.entity.Seat;
 
 public class SeatDto {
@@ -12,8 +11,6 @@ public class SeatDto {
     private String column;
 
     private Seat.Type seatType;
-
-    private Room room;
 
     public Long getId() {
         return id;
@@ -45,13 +42,5 @@ public class SeatDto {
 
     public void setSeatType(Seat.Type seatType) {
         this.seatType = seatType;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
     }
 }

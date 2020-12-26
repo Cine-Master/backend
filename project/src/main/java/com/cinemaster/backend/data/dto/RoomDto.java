@@ -8,6 +8,8 @@ public class RoomDto {
 
     private String name;
 
+    private List<SeatDto> seats;
+
     public Long getId() {
         return id;
     }
@@ -22,5 +24,13 @@ public class RoomDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<SeatDto> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<SeatDto> seats) {
+        this.seats = seats;
     }
 }

@@ -1,18 +1,14 @@
 package com.cinemaster.backend.data.dto;
 
-import com.cinemaster.backend.data.entity.Event;
-import com.cinemaster.backend.data.entity.Seat;
-import com.cinemaster.backend.data.entity.User;
-
 public class BookingDto {
 
     private Long id;
 
-    private Event event;
+    private EventDto eventDto;
 
-    private Seat seat;
+    private SeatDto seatDto;
 
-    private User user;
+    private UserDto userDto;
 
     public Long getId() {
         return id;
@@ -22,27 +18,27 @@ public class BookingDto {
         this.id = id;
     }
 
-    public Event getEvent() {
-        return event;
+    public EventDto getEventDto() {
+        return eventDto;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setEventDto(EventDto eventDto) {
+        this.eventDto = eventDto;
     }
 
-    public Seat getSeat() {
-        return seat;
+    public SeatDto getSeatDto() {
+        return seatDto;
     }
 
-    public void setSeat(Seat seat) {
-        this.seat = seat;
+    public void setSeatDto(SeatDto seatDto) {
+        this.seatDto = seatDto;
     }
 
-    public User getUser() {
-        return user;
+    public UserDto getUserDto() {
+        return userDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 }

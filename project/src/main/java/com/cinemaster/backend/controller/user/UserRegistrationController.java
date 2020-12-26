@@ -1,4 +1,4 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.user;
 
 import com.cinemaster.backend.data.dto.UserDto;
 import com.cinemaster.backend.data.dto.UserPasswordLessDto;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping(path = "/registration")
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", allowCredentials = "true")
-public class RegistrationController {
+public class UserRegistrationController {
 
     @Autowired
     private AccountService accountService;

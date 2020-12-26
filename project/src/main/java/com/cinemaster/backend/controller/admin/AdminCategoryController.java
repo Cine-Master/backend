@@ -1,40 +1,41 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.admin;
 
+import com.cinemaster.backend.controller.CookieMap;
 import com.cinemaster.backend.core.exception.ForbiddenException;
 import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
-import com.cinemaster.backend.data.dto.ActorDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
-import com.cinemaster.backend.data.service.ActorService;
+import com.cinemaster.backend.data.dto.CategoryDto;
+import com.cinemaster.backend.data.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/admin/actors")
+@RequestMapping(path = "/admin/categories")
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", allowCredentials = "true")
-public class AdminActorController {
+public class AdminCategoryController {
 
     @Autowired
-    private ActorService actorService;
+    private CategoryService categoryService;
 
     @GetMapping("")
-    public ResponseEntity actorList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity categoryList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            return ResponseEntity.ok(actorService.findAll());
+            return ResponseEntity.ok(categoryService.findAll());
         } else {
             throw new ForbiddenException();
         }
     }
 
     @PostMapping("")
-    public ResponseEntity actorAdd(@RequestBody ActorDto actorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity categoryAdd(@RequestBody CategoryDto categoryDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             try {
-                actorService.save(actorDto);
-                return ResponseEntity.ok(actorDto);
+                categoryService.save(categoryDto);
+                return ResponseEntity.ok(categoryDto);
             } catch (RuntimeException e) {
                 throw new InvalidDataException();
             }
@@ -44,12 +45,12 @@ public class AdminActorController {
     }
 
     @PutMapping("")
-    public ResponseEntity actorEdit(@RequestBody ActorDto actorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity categoryEdit(@RequestBody CategoryDto categoryDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             try {
-                actorService.update(actorDto);
-                return ResponseEntity.ok(actorDto);
+                categoryService.update(categoryDto);
+                return ResponseEntity.ok(categoryDto);
             } catch (RuntimeException e) {
                 throw new InvalidDataException();
             }
@@ -59,14 +60,13 @@ public class AdminActorController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity actorDelete(@RequestBody ActorDto actorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+    public ResponseEntity categoryDelete(@RequestBody CategoryDto categoryDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            actorService.delete(actorDto);
+            categoryService.delete(categoryDto);
             return ResponseEntity.ok("Successfully deleted");
         } else {
             throw new ForbiddenException();
         }
     }
-
 }

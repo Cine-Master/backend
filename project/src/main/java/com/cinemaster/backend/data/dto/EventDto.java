@@ -1,7 +1,5 @@
 package com.cinemaster.backend.data.dto;
 
-import com.cinemaster.backend.data.entity.Show;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -15,7 +13,7 @@ public class EventDto {
 
     private LocalTime endTime;
 
-    private Show show;
+    private ShowDto showDto;
 
     public Long getId() {
         return id;
@@ -49,11 +47,11 @@ public class EventDto {
         this.endTime = endTime;
     }
 
-    public Show getShow() {
-        return show;
+    public ShowDto getShowDto() {
+        return showDto;
     }
 
-    public void setShow(Show show) {
-        this.show = show;
+    public void setShowDto(ShowDto showDto) {
+        this.showDto = showDto;
     }
 }

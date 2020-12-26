@@ -6,11 +6,13 @@ import com.cinemaster.backend.data.entity.Booking;
 import com.cinemaster.backend.data.service.BookingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class BookingServiceImpl implements BookingService {
 
     @Autowired
