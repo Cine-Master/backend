@@ -3,6 +3,7 @@ package com.cinemaster.backend.controller;
 import com.cinemaster.backend.core.exception.WrongCredentialsException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
+import com.cinemaster.backend.data.dto.UserPasswordLessDto;
 import com.cinemaster.backend.data.service.AccountService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class LoginController {
             if (accountDto instanceof AdminPasswordLessDto) {
                 AdminPasswordLessDto adminDto = (AdminPasswordLessDto) accountDto;
                 return ResponseEntity.ok(adminDto);
+            } else if (accountDto instanceof UserPasswordLessDto) {
+                UserPasswordLessDto userDto = (UserPasswordLessDto) accountDto;
+                return ResponseEntity.ok(userDto);
             }
         }
         Optional<AccountPasswordLessDto> optional = accountService.checkCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword()));
@@ -46,8 +50,11 @@ public class LoginController {
                 AdminPasswordLessDto adminDto = (AdminPasswordLessDto) dto;
                 CookieMap.getInstance().getMap().put(cookieString, adminDto);
                 return ResponseEntity.ok(adminDto);
+            } else if (dto instanceof UserPasswordLessDto) {
+                UserPasswordLessDto userDto = (UserPasswordLessDto) dto;
+                CookieMap.getInstance().getMap().put(cookieString, userDto);
+                return ResponseEntity.ok(userDto);
             }
-            // else if user ecc
         } else {
             throw new WrongCredentialsException();
         }

@@ -1,7 +1,8 @@
 package com.cinemaster.backend.data.dto;
 
+import com.cinemaster.backend.data.entity.Event;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public class ShowDto {
@@ -12,12 +13,6 @@ public class ShowDto {
 
     private String photoUrl;
 
-    private LocalDate date;
-
-    private LocalTime startTime;
-
-    private LocalTime endTime;
-
     private String language;
 
     private String productionLocation;
@@ -26,7 +21,9 @@ public class ShowDto {
 
     private Boolean comingSoon;
 
-    private RoomDto room;
+    private Long length;
+
+    private LocalDate releaseDate;
 
     private List<CategoryDto> categories;
 
@@ -56,30 +53,6 @@ public class ShowDto {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
     }
 
     public String getLanguage() {
@@ -114,12 +87,20 @@ public class ShowDto {
         this.comingSoon = comingSoon;
     }
 
-    public RoomDto getRoom() {
-        return room;
+    public Long getLength() {
+        return length;
     }
 
-    public void setRoom(RoomDto room) {
-        this.room = room;
+    public void setLength(Long length) {
+        this.length = length;
+    }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public List<CategoryDto> getCategories() {

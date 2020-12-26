@@ -19,8 +19,11 @@ public class Room {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
-    private List<Show> shows;
+    @OneToMany(mappedBy = "room")
+    private List<Event> events;
+
+    @OneToMany(mappedBy = "room")
+    private List<Seat> seats;
 
     public Long getId() {
         return id;
@@ -38,11 +41,19 @@ public class Room {
         this.name = name;
     }
 
-    public List<Show> getShows() {
-        return shows;
+    public List<Event> getEvents() {
+        return events;
     }
 
-    public void setShows(List<Show> shows) {
-        this.shows = shows;
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
     }
 }

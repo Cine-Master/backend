@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -26,15 +25,6 @@ public class Show {
     @Column(name = "photo_url")
     private String photoUrl;
 
-    @Column(name = "date")
-    private LocalDate date;
-
-    @Column(name = "start_time")
-    private LocalTime startTime;
-
-    @Column(name = "end_time")
-    private LocalTime endTime;
-
     @Size(min = 1, max = 50, message = "The language length must be between 7 and 255")
     @Pattern(regexp = "[\\w ]+", message = "The language must be composed only by letters, numbers and spaces")
     @Column(name = "language")
@@ -53,9 +43,14 @@ public class Show {
     @Column(name = "coming_soon", nullable = false)
     private Boolean comingSoon;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room room;
+    @Column(name = "length")
+    private Long length;
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
+
+    @OneToMany(mappedBy = "show", fetch = FetchType.EAGER)
+    private List<Event> events;
 
     @ManyToMany
     @JoinTable(
@@ -105,30 +100,6 @@ public class Show {
         this.photoUrl = photoUrl;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
     public String getLanguage() {
         return language;
     }
@@ -161,12 +132,28 @@ public class Show {
         this.comingSoon = comingSoon;
     }
 
-    public Room getRoom() {
-        return room;
+    public Long getLength() {
+        return length;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setLength(Long length) {
+        this.length = length;
+    }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
     public List<Category> getCategories() {
