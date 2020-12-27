@@ -1,13 +1,18 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.core.exception.ShowNotFoundException;
 import com.cinemaster.backend.data.dao.EventDao;
 import com.cinemaster.backend.data.dto.EventDto;
 import com.cinemaster.backend.data.entity.Event;
+import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.service.EventService;
+import com.cinemaster.backend.data.specification.EventSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,10 +27,17 @@ public class EventServiceImpl implements EventService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(EventDto eventDto) {
-        Event event = modelMapper.map(eventDto, Event.class);
-        eventDao.saveAndFlush(event);
-        eventDto.setId(event.getId());
+    @Transactional
+    public Optional<EventDto> save(EventDto eventDto) {
+        List<Event> events = eventDao.findAll(EventSpecification.findAllBy(modelMapper.map(eventDto.getRoom(), Room.class), eventDto.getDate(), eventDto.getStartTime(), eventDto.getEndTime()));
+        if (events.isEmpty()) {
+            Event event = modelMapper.map(eventDto, Event.class);
+            eventDao.saveAndFlush(event);
+            eventDto.setId(event.getId());
+            return Optional.empty();
+        } else {
+            return Optional.of(eventDto);
+        }
     }
 
     // TODO come nella delete?

@@ -13,7 +13,9 @@ public class EventDto {
 
     private LocalTime endTime;
 
-    private ShowDto showDto;
+    private ShowDto show;
+
+    private RoomDto room;
 
     public Long getId() {
         return id;
@@ -47,11 +49,19 @@ public class EventDto {
         this.endTime = endTime;
     }
 
-    public ShowDto getShowDto() {
-        return showDto;
+    public ShowDto getShow() {
+        return show;
     }
 
-    public void setShowDto(ShowDto showDto) {
-        this.showDto = showDto;
+    public void setShow(ShowDto show) {
+        this.show = show;
+    }
+
+    public RoomDto getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomDto room) {
+        this.room = room;
     }
 }

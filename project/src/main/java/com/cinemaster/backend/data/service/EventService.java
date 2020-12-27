@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface EventService {
 
-    void save(EventDto eventDto);
+    Optional<EventDto> save(EventDto eventDto);
 
     void update(EventDto eventDto);
 
