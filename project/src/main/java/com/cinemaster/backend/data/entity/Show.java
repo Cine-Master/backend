@@ -135,6 +135,14 @@ public class Show {
         this.comingSoon = comingSoon;
     }
 
+    public Boolean getHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(Boolean highlighted) {
+        this.highlighted = highlighted;
+    }
+
     public Long getLength() {
         return length;
     }

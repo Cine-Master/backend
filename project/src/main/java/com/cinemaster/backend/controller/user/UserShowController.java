@@ -27,8 +27,10 @@ public class UserShowController {
     @GetMapping("/search")
     public ResponseEntity showListByName(
             @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "coming-soon", required = false) Boolean comingSoon,
+            @RequestParam(value = "highlighted", required = false) Boolean highlighted,
             @RequestParam(value = "category", required = false) String[] categories) {
-        return ResponseEntity.ok(showService.findAllByFilter(new ShowSpecification.Filter(name, categories)));
+        return ResponseEntity.ok(showService.findAllByFilter(new ShowSpecification.Filter(name, comingSoon, highlighted, categories)));
     }
 
     @GetMapping("/details")

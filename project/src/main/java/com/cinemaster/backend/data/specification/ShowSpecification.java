@@ -21,6 +21,15 @@ public class ShowSpecification {
                 ListJoin<Show, Category> listJoin = root.joinList("categories");
                 predicate = criteriaBuilder.and(predicate, listJoin.get("name").in(filter.categories));
             }
+            if (filter.comingSoon != null && filter.comingSoon == true) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.isTrue(root.get("comingSoon")));
+            }
+            if (filter.comingSoon != null && filter.comingSoon == false) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.isFalse(root.get("comingSoon")));
+            }
+            if (filter.highlighted != null && filter.highlighted == true) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.isTrue(root.get("highlighted")));
+            }
             return criteriaQuery.where(predicate).distinct(true).getRestriction();
         };
     }
@@ -28,8 +37,10 @@ public class ShowSpecification {
     public static class Filter {
         private String name;
         private List<String> categories;
+        private Boolean comingSoon;
+        private Boolean highlighted;
 
-        public Filter(String name, String... categories) {
+        public Filter(String name, Boolean comingSoon, Boolean highlighted, String... categories) {
             if (name == null) {
                 this.name = null;
             } else {
@@ -41,6 +52,8 @@ public class ShowSpecification {
                     this.categories.add(category);
                 }
             }
+            this.comingSoon = comingSoon;
+            this.highlighted = highlighted;
         }
     }
 
