@@ -16,4 +16,6 @@ public interface BookingService {
     Optional<BookingDto> findById(Long id);
 
     List<BookingDto> findAll();
+
+    void deleteExpired();
 }

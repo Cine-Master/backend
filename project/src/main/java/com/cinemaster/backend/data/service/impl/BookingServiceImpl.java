@@ -1,13 +1,23 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.core.exception.BookingAlreadyPresentException;
+import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dao.BookingDao;
+import com.cinemaster.backend.data.dao.EventDao;
+import com.cinemaster.backend.data.dao.RoomDao;
+import com.cinemaster.backend.data.dao.SeatDao;
 import com.cinemaster.backend.data.dto.BookingDto;
 import com.cinemaster.backend.data.entity.Booking;
+import com.cinemaster.backend.data.entity.Event;
+import com.cinemaster.backend.data.entity.Room;
+import com.cinemaster.backend.data.entity.Seat;
 import com.cinemaster.backend.data.service.BookingService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,13 +29,34 @@ public class BookingServiceImpl implements BookingService {
     private BookingDao bookingDao;
 
     @Autowired
+    private EventDao eventDao;
+
+    @Autowired
+    private RoomDao roomDao;
+
+    @Autowired
+    private SeatDao seatDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public void save(BookingDto bookingDto) {
         Booking booking = modelMapper.map(bookingDto, Booking.class);
-        bookingDao.save(booking);
-        bookingDto.setId(booking.getId());
+        Event event = eventDao.findById(booking.getEvent().getId()).orElseThrow(() -> new InvalidDataException());
+        Room room = roomDao.findById(event.getRoom().getId()).orElseThrow(() -> new InvalidDataException());
+        Seat seat = seatDao.findById(booking.getSeat().getId()).orElseThrow(() -> new InvalidDataException());
+        if (room.getId() != seat.getRoom().getId()) {
+            throw new InvalidDataException();
+        }
+        List<Booking> bookings = bookingDao.findAllByEventAndSeat(booking.getEvent(), booking.getSeat());
+        if (bookings.isEmpty()) {
+            bookingDao.save(booking);
+            bookingDto.setId(booking.getId());
+        } else {
+            throw new BookingAlreadyPresentException();
+        }
     }
 
     // TODO come la delete?
@@ -52,5 +83,13 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> findAll() {
         return bookingDao.findAll().stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteExpired() {
+        for (Booking booking : bookingDao.findAllByExpirationBefore(LocalDateTime.now())) {
+            bookingDao.delete(booking);
+        }
     }
 }

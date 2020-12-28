@@ -1,14 +1,20 @@
 package com.cinemaster.backend.data.dto;
 
+import java.time.LocalDateTime;
+
 public class BookingDto {
 
     private Long id;
 
-    private EventDto eventDto;
+    private EventDto event;
 
-    private SeatDto seatDto;
+    private SeatDto seat;
 
-    private UserDto userDto;
+    private UserDto user;
+
+    private Boolean payed;
+
+    private LocalDateTime expiration;
 
     public Long getId() {
         return id;
@@ -18,27 +24,43 @@ public class BookingDto {
         this.id = id;
     }
 
-    public EventDto getEventDto() {
-        return eventDto;
+    public EventDto getEvent() {
+        return event;
     }
 
-    public void setEventDto(EventDto eventDto) {
-        this.eventDto = eventDto;
+    public void setEvent(EventDto event) {
+        this.event = event;
     }
 
-    public SeatDto getSeatDto() {
-        return seatDto;
+    public SeatDto getSeat() {
+        return seat;
     }
 
-    public void setSeatDto(SeatDto seatDto) {
-        this.seatDto = seatDto;
+    public void setSeat(SeatDto seat) {
+        this.seat = seat;
     }
 
-    public UserDto getUserDto() {
-        return userDto;
+    public UserDto getUser() {
+        return user;
     }
 
-    public void setUserDto(UserDto userDto) {
-        this.userDto = userDto;
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
+
+    public Boolean getPayed() {
+        return payed;
+    }
+
+    public void setPayed(Boolean payed) {
+        this.payed = payed;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(LocalDateTime expiration) {
+        this.expiration = expiration;
     }
 }

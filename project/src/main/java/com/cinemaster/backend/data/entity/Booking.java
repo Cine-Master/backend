@@ -1,6 +1,7 @@
 package com.cinemaster.backend.data.entity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "booking")
@@ -19,6 +20,12 @@ public class Booking {
 
     @ManyToOne
     private User user;
+
+    @Column(name = "payed", nullable = false)
+    private Boolean payed;
+
+    @Column(name = "expiration")
+    private LocalDateTime expiration;
 
     public Long getId() {
         return id;
@@ -50,5 +57,21 @@ public class Booking {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getPayed() {
+        return payed;
+    }
+
+    public void setPayed(Boolean payed) {
+        this.payed = payed;
+    }
+
+    public LocalDateTime getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(LocalDateTime expiration) {
+        this.expiration = expiration;
     }
 }
