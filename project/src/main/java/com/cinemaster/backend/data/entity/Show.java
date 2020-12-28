@@ -43,6 +43,9 @@ public class Show {
     @Column(name = "coming_soon", nullable = false)
     private Boolean comingSoon;
 
+    @Column(name = "highlighted", nullable = false)
+    private Boolean highlighted;
+
     @Column(name = "length")
     private Long length;
 

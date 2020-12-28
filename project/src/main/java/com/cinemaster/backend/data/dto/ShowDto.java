@@ -1,7 +1,5 @@
 package com.cinemaster.backend.data.dto;
 
-import com.cinemaster.backend.data.entity.Event;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,6 +18,8 @@ public class ShowDto {
     private String description;
 
     private Boolean comingSoon;
+
+    private Boolean highlighted;
 
     private Long length;
 
@@ -85,6 +85,14 @@ public class ShowDto {
 
     public void setComingSoon(Boolean comingSoon) {
         this.comingSoon = comingSoon;
+    }
+
+    public Boolean getHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(Boolean highlighted) {
+        this.highlighted = highlighted;
     }
 
     public Long getLength() {
