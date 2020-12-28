@@ -76,5 +76,5 @@ public class Seat {
         this.bookings = bookings;
     }
 
-    public enum Type {STALLS, BALCONY}
+    public enum Type {STANDARD, PREMIUM, VIP}
 }

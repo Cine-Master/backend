@@ -23,6 +23,9 @@ public class Event {
     @Column(name = "end_time")
     private LocalTime endTime;
 
+    @Embedded
+    private Price price;
+
     @ManyToOne
     private Show show;
 
@@ -62,6 +65,14 @@ public class Event {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public void setPrice(Price price) {
+        this.price = price;
     }
 
     public Show getShow() {

@@ -1,5 +1,7 @@
 package com.cinemaster.backend.data.dto;
 
+import com.cinemaster.backend.data.entity.Price;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,6 +14,8 @@ public class EventDto {
     private LocalTime startTime;
 
     private LocalTime endTime;
+
+    private Price price;
 
     private ShowDto show;
 
@@ -47,6 +51,14 @@ public class EventDto {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public void setPrice(Price price) {
+        this.price = price;
     }
 
     public ShowDto getShow() {

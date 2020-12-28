@@ -2,6 +2,7 @@ package com.cinemaster.backend.controller;
 
 import com.cinemaster.backend.data.dto.RoomDto;
 import com.cinemaster.backend.data.dto.ShowDto;
+import com.cinemaster.backend.data.entity.Price;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,6 +13,8 @@ public class EventCreationParams {
     private ShowDto show;
 
     private RoomDto room;
+
+    private Price price;
 
     private LocalDate startDate;
 
@@ -33,6 +36,14 @@ public class EventCreationParams {
 
     public void setRoom(RoomDto room) {
         this.room = room;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public void setPrice(Price price) {
+        this.price = price;
     }
 
     public LocalDate getStartDate() {

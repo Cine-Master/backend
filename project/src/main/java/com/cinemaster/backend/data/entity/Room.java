@@ -19,6 +19,12 @@ public class Room {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "n_rows")
+    private Long nRows;
+
+    @Column(name = "n_columns")
+    private Long nColumns;
+
     @OneToMany(mappedBy = "room")
     private List<Event> events;
 
@@ -47,6 +53,22 @@ public class Room {
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+
+    public Long getnRows() {
+        return nRows;
+    }
+
+    public void setnRows(Long nRows) {
+        this.nRows = nRows;
+    }
+
+    public Long getnColumns() {
+        return nColumns;
+    }
+
+    public void setnColumns(Long nColumns) {
+        this.nColumns = nColumns;
     }
 
     public List<Seat> getSeats() {

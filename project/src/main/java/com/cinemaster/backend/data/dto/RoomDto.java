@@ -8,6 +8,10 @@ public class RoomDto {
 
     private String name;
 
+    private Long nRows;
+
+    private Long nColumns;
+
     private List<SeatDto> seats;
 
     public Long getId() {
@@ -24,6 +28,22 @@ public class RoomDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getnRows() {
+        return nRows;
+    }
+
+    public void setnRows(Long nRows) {
+        this.nRows = nRows;
+    }
+
+    public Long getnColumns() {
+        return nColumns;
+    }
+
+    public void setnColumns(Long nColumns) {
+        this.nColumns = nColumns;
     }
 
     public List<SeatDto> getSeats() {

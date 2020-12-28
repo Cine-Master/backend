@@ -6,10 +6,14 @@ import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.dto.RoomDto;
+import com.cinemaster.backend.data.dto.SeatDto;
+import com.cinemaster.backend.data.entity.Seat;
 import com.cinemaster.backend.data.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(path = "/admin/rooms")
@@ -34,6 +38,18 @@ public class AdminRoomController {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             try {
+                if (roomDto.getSeats() == null || roomDto.getSeats().isEmpty()) {
+                    roomDto.setSeats(new ArrayList<>());
+                    for (int i = 0; i < roomDto.getnRows(); i++) {
+                        for (int j = 0; j < roomDto.getnColumns(); j++) {
+                            SeatDto seatDto = new SeatDto();
+                            seatDto.setRow(Character.toString((char) (65 + i)));
+                            seatDto.setColumn(Integer.toString(j + 1));
+                            seatDto.setSeatType(Seat.Type.STANDARD);
+                            roomDto.getSeats().add(seatDto);
+                        }
+                    }
+                }
                 roomService.save(roomDto);
                 return ResponseEntity.ok(roomDto);
             } catch (RuntimeException e) {
