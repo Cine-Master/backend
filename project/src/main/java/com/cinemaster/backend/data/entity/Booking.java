@@ -27,6 +27,9 @@ public class Booking {
     @Column(name = "expiration")
     private LocalDateTime expiration;
 
+    @Column(name = "price")
+    private Double price;
+
     public Long getId() {
         return id;
     }
@@ -73,5 +76,13 @@ public class Booking {
 
     public void setExpiration(LocalDateTime expiration) {
         this.expiration = expiration;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

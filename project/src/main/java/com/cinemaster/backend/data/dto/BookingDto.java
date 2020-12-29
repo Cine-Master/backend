@@ -16,6 +16,8 @@ public class BookingDto {
 
     private LocalDateTime expiration;
 
+    private Double price;
+
     public Long getId() {
         return id;
     }
@@ -62,5 +64,13 @@ public class BookingDto {
 
     public void setExpiration(LocalDateTime expiration) {
         this.expiration = expiration;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
