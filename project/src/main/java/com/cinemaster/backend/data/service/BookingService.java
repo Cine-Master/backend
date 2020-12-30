@@ -1,6 +1,8 @@
 package com.cinemaster.backend.data.service;
 
+import com.cinemaster.backend.controller.booking.Ticket;
 import com.cinemaster.backend.data.dto.BookingDto;
+import com.cinemaster.backend.data.dto.SeatDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +20,8 @@ public interface BookingService {
     List<BookingDto> findAll();
 
     void deleteExpired();
+
+    List<SeatDto> findBookedSeatsByEventId(Long id);
+
+    List<Ticket> findAllByUserId(Long id);
 }

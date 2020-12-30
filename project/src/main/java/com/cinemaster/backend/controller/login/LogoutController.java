@@ -1,4 +1,4 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.login;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;

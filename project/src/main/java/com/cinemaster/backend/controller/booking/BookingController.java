@@ -1,6 +1,6 @@
 package com.cinemaster.backend.controller.booking;
 
-import com.cinemaster.backend.controller.CookieMap;
+import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.BookingAlreadyPresentException;
 import com.cinemaster.backend.core.exception.ForbiddenException;
 import com.cinemaster.backend.core.exception.InvalidDataException;
@@ -56,7 +56,7 @@ public class BookingController {
                     BookingDto bookingDto = new BookingDto();
                     bookingDto.setEvent(bookingCreationParams.getEvent());
                     bookingDto.setSeat(seatDto);
-                    bookingDto.setUser(modelMapper.map(accountDto, UserDto.class));
+                    bookingDto.setUser(modelMapper.map(accountDto, UserPasswordLessDto.class));
                     bookingDto.setPayed(false);
                     bookingDto.setExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
                     bookingDto.setPrice(0D);

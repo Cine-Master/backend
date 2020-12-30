@@ -1,13 +1,9 @@
 package com.cinemaster.backend.controller.admin;
 
-import com.cinemaster.backend.controller.CookieMap;
+import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.ForbiddenException;
-import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
-import com.cinemaster.backend.data.dto.ActorDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
-import com.cinemaster.backend.data.service.ActorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

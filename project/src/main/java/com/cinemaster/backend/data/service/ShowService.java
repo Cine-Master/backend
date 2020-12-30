@@ -19,4 +19,6 @@ public interface ShowService {
     List<ShowDto> findAll();
 
     List<ShowDto> findAllByFilter(ShowSpecification.Filter filter);
+
+    List<ShowDto> findAllByEventBeforeNextWeek();
 }

@@ -1,4 +1,4 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.login;
 
 import com.cinemaster.backend.core.exception.WrongCredentialsException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;

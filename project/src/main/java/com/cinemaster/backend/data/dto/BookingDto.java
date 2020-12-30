@@ -10,7 +10,7 @@ public class BookingDto {
 
     private SeatDto seat;
 
-    private UserDto user;
+    private UserPasswordLessDto user;
 
     private Boolean payed;
 
@@ -42,11 +42,11 @@ public class BookingDto {
         this.seat = seat;
     }
 
-    public UserDto getUser() {
+    public UserPasswordLessDto getUser() {
         return user;
     }
 
-    public void setUser(UserDto user) {
+    public void setUser(UserPasswordLessDto user) {
         this.user = user;
     }
 

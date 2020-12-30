@@ -1,4 +1,4 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.admin;
 
 import com.cinemaster.backend.data.dto.RoomDto;
 import com.cinemaster.backend.data.dto.ShowDto;

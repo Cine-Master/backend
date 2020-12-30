@@ -44,4 +44,9 @@ public class UserShowController {
         }
     }
 
+    @GetMapping("/next-week")
+    public ResponseEntity nextShowList() {
+        return ResponseEntity.ok(showService.findAllByEventBeforeNextWeek());
+    }
+
 }

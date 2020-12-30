@@ -1,4 +1,4 @@
-package com.cinemaster.backend.controller;
+package com.cinemaster.backend.controller.login;
 
 public class Credentials {
 

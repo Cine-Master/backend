@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,5 +65,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDto> findAll() {
         return eventDao.findAll().stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EventDto> findAllByShowId(Long id) {
+        return eventDao.findAllByShowIdAndDateAfter(id, LocalDate.now()).stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
     }
 }

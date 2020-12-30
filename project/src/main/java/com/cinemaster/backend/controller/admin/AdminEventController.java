@@ -1,7 +1,6 @@
 package com.cinemaster.backend.controller.admin;
 
-import com.cinemaster.backend.controller.CookieMap;
-import com.cinemaster.backend.controller.EventCreationParams;
+import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.EventsNotCreatedException;
 import com.cinemaster.backend.core.exception.ForbiddenException;
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
