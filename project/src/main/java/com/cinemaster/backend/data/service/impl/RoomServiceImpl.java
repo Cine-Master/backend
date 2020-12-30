@@ -1,14 +1,12 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.core.exception.RoomAlreadyPresentException;
 import com.cinemaster.backend.data.dao.RoomDao;
 import com.cinemaster.backend.data.dao.SeatDao;
-import com.cinemaster.backend.data.dto.EventDto;
 import com.cinemaster.backend.data.dto.RoomDto;
 import com.cinemaster.backend.data.dto.SeatDto;
-import com.cinemaster.backend.data.entity.Event;
 import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.entity.Seat;
-import com.cinemaster.backend.data.service.EventService;
 import com.cinemaster.backend.data.service.RoomService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +24,6 @@ public class RoomServiceImpl implements RoomService {
     private RoomDao roomDao;
 
     @Autowired
-    private EventService eventService;
-
-    @Autowired
     private SeatDao seatDao;
 
     @Autowired
@@ -37,45 +32,32 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public void save(RoomDto roomDto) {
-        Room room = modelMapper.map(roomDto, Room.class);
-        roomDao.saveAndFlush(room);
-        roomDto.setId(room.getId());
+        List<Room> rooms = roomDao.findAllByName(roomDto.getName());
+        if (rooms.isEmpty()) {
+            Room room = modelMapper.map(roomDto, Room.class);
+            roomDao.saveAndFlush(room);
+            roomDto.setId(room.getId());
 
-        for (SeatDto seatDto : roomDto.getSeats()) {
-            Seat seat = modelMapper.map(seatDto, Seat.class);
-            seat.setRoom(room);
-            seatDao.save(seat);
+            for (SeatDto seatDto : roomDto.getSeats()) {
+                Seat seat = modelMapper.map(seatDto, Seat.class);
+                seat.setRoom(room);
+                seatDao.save(seat);
+            }
+        } else {
+            throw new RoomAlreadyPresentException();
         }
     }
 
-    // TODO qualcosa tipo la delete
+    // TODO empty
     @Override
     @Transactional
     public void update(RoomDto roomDto) {
-        Room room = modelMapper.map(roomDto, Room.class);
-        roomDao.saveAndFlush(room);
-
-        for (SeatDto seatDto : roomDto.getSeats()) {
-            Seat seat = modelMapper.map(seatDto, Seat.class);
-            seat.setRoom(room);
-            seatDao.save(seat);
-        }
     }
 
+    // TODO empty
     @Override
     @Transactional
     public void delete(RoomDto roomDto) {
-        Optional<Room> optional = roomDao.findById(roomDto.getId());
-        if (optional.isPresent()) {
-            Room room = optional.get();
-            for (Event event : room.getEvents()) {
-                eventService.delete(modelMapper.map(event, EventDto.class));
-            }
-            for (Seat seat : room.getSeats()) {
-                seatDao.delete(seat);
-            }
-            roomDao.delete(room);
-        }
     }
 
     @Override

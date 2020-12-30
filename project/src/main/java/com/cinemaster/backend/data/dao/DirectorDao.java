@@ -10,4 +10,5 @@ public interface DirectorDao extends JpaRepository<Director, Long>, JpaSpecifica
 
     List<Director> findAllByNameContains(String name);
 
+    List<Director> findAllByName(String name);
 }

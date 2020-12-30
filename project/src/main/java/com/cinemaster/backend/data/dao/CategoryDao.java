@@ -10,4 +10,5 @@ public interface CategoryDao extends JpaRepository<Category, Long>, JpaSpecifica
 
     List<Category> findAllByNameContains(String name);
 
+    List<Category> findAllByName(String name);
 }

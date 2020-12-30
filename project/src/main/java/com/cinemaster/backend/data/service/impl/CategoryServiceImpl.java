@@ -1,7 +1,12 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.core.exception.ActorAlreadyPresentException;
+import com.cinemaster.backend.core.exception.ActorNotFoundException;
+import com.cinemaster.backend.core.exception.CategoryAlreadyPresentException;
+import com.cinemaster.backend.core.exception.CategoryNotFoundException;
 import com.cinemaster.backend.data.dao.CategoryDao;
 import com.cinemaster.backend.data.dto.CategoryDto;
+import com.cinemaster.backend.data.entity.Actor;
 import com.cinemaster.backend.data.entity.Category;
 import com.cinemaster.backend.data.entity.Show;
 import com.cinemaster.backend.data.service.CategoryService;
@@ -24,16 +29,32 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public void save(CategoryDto categoryDto) {
-        Category category = modelMapper.map(categoryDto, Category.class);
-        categoryDao.saveAndFlush(category);
-        categoryDto.setId(category.getId());
+        List<Category> categories = categoryDao.findAllByName(categoryDto.getName());
+        if (categories.isEmpty()) {
+            Category category = modelMapper.map(categoryDto, Category.class);
+            categoryDao.saveAndFlush(category);
+            categoryDto.setId(category.getId());
+        } else {
+            throw new CategoryAlreadyPresentException();
+        }
     }
 
     @Override
+    @Transactional
     public void update(CategoryDto categoryDto) {
-        Category category = modelMapper.map(categoryDto, Category.class);
-        categoryDao.saveAndFlush(category);
+        Optional<Category> optional = categoryDao.findById(categoryDto.getId());
+        if (!(optional.isPresent())) {
+            throw new CategoryNotFoundException();
+        }
+        List<Category> categories = categoryDao.findAllByName(categoryDto.getName());
+        if (categories.isEmpty()) {
+            Category category = modelMapper.map(categoryDto, Category.class);
+            categoryDao.saveAndFlush(category);
+        } else {
+            throw new CategoryAlreadyPresentException();
+        }
     }
 
     @Override
@@ -46,6 +67,8 @@ public class CategoryServiceImpl implements CategoryService {
                 show.getCategories().remove(category);
             }
             categoryDao.delete(category);
+        } else {
+            throw new CategoryNotFoundException();
         }
     }
 

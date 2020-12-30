@@ -2,7 +2,6 @@ package com.cinemaster.backend.controller.admin;
 
 import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.ForbiddenException;
-import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.dto.CategoryDto;
@@ -33,12 +32,8 @@ public class AdminCategoryController {
     public ResponseEntity categoryAdd(@RequestBody CategoryDto categoryDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            try {
-                categoryService.save(categoryDto);
-                return ResponseEntity.ok(categoryDto);
-            } catch (RuntimeException e) {
-                throw new InvalidDataException();
-            }
+            categoryService.save(categoryDto);
+            return ResponseEntity.ok(categoryDto);
         } else {
             throw new ForbiddenException();
         }
@@ -48,12 +43,8 @@ public class AdminCategoryController {
     public ResponseEntity categoryEdit(@RequestBody CategoryDto categoryDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            try {
-                categoryService.update(categoryDto);
-                return ResponseEntity.ok(categoryDto);
-            } catch (RuntimeException e) {
-                throw new InvalidDataException();
-            }
+            categoryService.update(categoryDto);
+            return ResponseEntity.ok(categoryDto);
         } else {
             throw new ForbiddenException();
         }

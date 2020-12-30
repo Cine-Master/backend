@@ -10,4 +10,5 @@ public interface ActorDao extends JpaRepository<Actor, Long>, JpaSpecificationEx
 
     List<Actor> findAllByNameContains(String name);
 
+    List<Actor> findAllByName(String name);
 }

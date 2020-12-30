@@ -29,7 +29,7 @@ public class UserEventController {
     }
 
     @GetMapping("/seats/booked")
-    public ResponseEntity bookedSeatsofEventList(
+    public ResponseEntity bookedSeatsOfEventList(
             @RequestParam(value = "id", required = true) Long id) {
         List<SeatDto> seats = bookingService.findBookedSeatsByEventId(id);
         return ResponseEntity.ok(seats);

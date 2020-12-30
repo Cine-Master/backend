@@ -1,8 +1,7 @@
 package com.cinemaster.backend.data.service.impl;
 
 import com.cinemaster.backend.controller.booking.Ticket;
-import com.cinemaster.backend.core.exception.BookingAlreadyPresentException;
-import com.cinemaster.backend.core.exception.InvalidDataException;
+import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dao.BookingDao;
 import com.cinemaster.backend.data.dao.EventDao;
 import com.cinemaster.backend.data.dao.RoomDao;
@@ -47,9 +46,9 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public void save(BookingDto bookingDto) {
         Booking booking = modelMapper.map(bookingDto, Booking.class);
-        Event event = eventDao.findById(booking.getEvent().getId()).orElseThrow(() -> new InvalidDataException());
-        Room room = roomDao.findById(event.getRoom().getId()).orElseThrow(() -> new InvalidDataException());
-        Seat seat = seatDao.findById(booking.getSeat().getId()).orElseThrow(() -> new InvalidDataException());
+        Event event = eventDao.findById(booking.getEvent().getId()).orElseThrow(() -> new EventNotFoundException());
+        Room room = roomDao.findById(event.getRoom().getId()).orElseThrow(() -> new RoomNotFoundException());
+        Seat seat = seatDao.findById(booking.getSeat().getId()).orElseThrow(() -> new SeatNotFoundException());
         if (room.getId() != seat.getRoom().getId()) {
             throw new InvalidDataException();
         }
@@ -62,16 +61,21 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    // TODO come la delete?
+    // TODO empty
     @Override
     public void update(BookingDto bookingDto) {
-        Booking booking = modelMapper.map(bookingDto, Booking.class);
-        bookingDao.save(booking);
     }
 
     @Override
+    @Transactional
     public void delete(BookingDto bookingDto) {
-// TODO mo vediamo
+        Optional<Booking> optional = bookingDao.findById(bookingDto.getId());
+        if (optional.isPresent()) {
+            Booking booking = optional.get();
+            bookingDao.delete(booking);
+        } else {
+            throw new BookingNotFoundException();
+        }
     }
 
     @Override
@@ -99,6 +103,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<SeatDto> findBookedSeatsByEventId(Long id) {
+        if (!(eventDao.findById(id).isPresent())) {
+            throw new EventNotFoundException();
+        }
         List<SeatDto> seats = new ArrayList<>();
         for (BookingDto booking : bookingDao.findAllByEventId(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList())) {
             seats.add(booking.getSeat());

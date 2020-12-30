@@ -10,4 +10,6 @@ public interface RoomDao extends JpaRepository<Room, Long>, JpaSpecificationExec
 
     List<Room> findAllByNameContains(String name);
 
+    List<Room> findAllByName(String name);
+
 }

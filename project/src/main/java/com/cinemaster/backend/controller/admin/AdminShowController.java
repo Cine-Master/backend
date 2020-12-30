@@ -39,25 +39,12 @@ public class AdminShowController {
         }
     }
 
-
-    // TODO: business logic, how to manage when changing something important (tickets refund?)
     @PutMapping("")
     public ResponseEntity showEdit(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
             showService.update(showDto);
             return ResponseEntity.ok(showDto);
-        } else {
-            throw new ForbiddenException();
-        }
-    }
-
-    @DeleteMapping("")
-    public ResponseEntity showDelete(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
-        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            showService.delete(showDto);
-            return ResponseEntity.ok("Successfully deleted");
         } else {
             throw new ForbiddenException();
         }

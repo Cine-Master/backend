@@ -2,10 +2,12 @@ package com.cinemaster.backend.data.service.impl;
 
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
 import com.cinemaster.backend.data.dao.EventDao;
+import com.cinemaster.backend.data.dao.ShowDao;
 import com.cinemaster.backend.data.dto.EventDto;
 import com.cinemaster.backend.data.entity.Event;
 import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.service.EventService;
+import com.cinemaster.backend.data.service.ShowService;
 import com.cinemaster.backend.data.specification.EventSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class EventServiceImpl implements EventService {
     private EventDao eventDao;
 
     @Autowired
+    private ShowDao showDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -41,16 +46,16 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    // TODO come nella delete?
+    // TODO empty
     @Override
     public void update(EventDto eventDto) {
-        Event event = modelMapper.map(eventDto, Event.class);
-        eventDao.saveAndFlush(event);
+
     }
 
+    // TODO empty
     @Override
     public void delete(EventDto eventDto) {
-        // TODO mo vediamo
+
     }
 
     @Override
@@ -68,7 +73,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public List<EventDto> findAllByShowId(Long id) {
+        if (!(showDao.findById(id).isPresent())) {
+            throw new ShowNotFoundException();
+        }
         return eventDao.findAllByShowIdAndDateAfter(id, LocalDate.now()).stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
     }
 }

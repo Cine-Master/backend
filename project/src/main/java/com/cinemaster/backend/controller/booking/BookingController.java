@@ -1,9 +1,7 @@
 package com.cinemaster.backend.controller.booking;
 
 import com.cinemaster.backend.controller.login.CookieMap;
-import com.cinemaster.backend.core.exception.BookingAlreadyPresentException;
-import com.cinemaster.backend.core.exception.ForbiddenException;
-import com.cinemaster.backend.core.exception.InvalidDataException;
+import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dto.*;
 import com.cinemaster.backend.data.service.BookingService;
 import com.cinemaster.backend.data.service.EventService;
@@ -52,10 +50,10 @@ public class BookingController {
         if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
             List<BookingDto> bookings = new ArrayList<>();
             try {
-                for (SeatDto seatDto : bookingCreationParams.getSeats()) {
+                for (SeatDto seat : bookingCreationParams.getSeats()) {
                     BookingDto bookingDto = new BookingDto();
                     bookingDto.setEvent(bookingCreationParams.getEvent());
-                    bookingDto.setSeat(seatDto);
+                    bookingDto.setSeat(seat);
                     bookingDto.setUser(modelMapper.map(accountDto, UserPasswordLessDto.class));
                     bookingDto.setPayed(false);
                     bookingDto.setExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
@@ -63,7 +61,7 @@ public class BookingController {
                     bookingService.save(bookingDto);
                     bookings.add(bookingDto);
                 }
-            } catch (InvalidDataException | BookingAlreadyPresentException e) {
+            } catch (EventNotFoundException | RoomNotFoundException | SeatNotFoundException | InvalidDataException | BookingAlreadyPresentException e) {
                 for (BookingDto bookingDto : bookings) {
                     bookingService.delete(bookingDto);
                 }
@@ -82,14 +80,14 @@ public class BookingController {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
             for (BookingConfirmationParams param : bookings) {
-                BookingDto booking = bookingService.findById(param.getBooking().getId()).orElseThrow(() -> new InvalidDataException());
+                BookingDto booking = bookingService.findById(param.getBooking().getId()).orElseThrow(() -> new BookingNotFoundException());
                 booking.setPayed(true);
                 booking.setPrice(param.getPrice());
                 booking.setExpiration(null);
                 bookingService.update(booking);
 
-                EventDto event = eventService.findById(booking.getEvent().getId()).orElseThrow(() -> new InvalidDataException());
-                SeatDto seat = seatService.findById(booking.getSeat().getId()).orElseThrow(() -> new InvalidDataException());
+                EventDto event = eventService.findById(booking.getEvent().getId()).orElseThrow(() -> new EventNotFoundException());
+                SeatDto seat = seatService.findById(booking.getSeat().getId()).orElseThrow(() -> new SeatNotFoundException());
 
                 Ticket ticket = new Ticket();
                 ticket.setBookingId(booking.getId());
@@ -103,7 +101,7 @@ public class BookingController {
 
                 String ticketPath = pdfService.createPdf(ticket);
                 // TODO inviare un messaggio più bello, con i dettagli dell'ordine
-                emailService.sendEmail(((UserPasswordLessDto) accountDto).getEmail(), String.format("Prenotazione #%d confermata", booking.getId()), "In allegato può trovare il biglietto. Si prega di stamparlo ed esporlo all'ingresso prima dell'evento.\nLa ringraziamo per averci scelto!", ticketPath);
+                emailService.sendTicketEmail(((UserPasswordLessDto) accountDto).getEmail(), ticket, ticketPath);
             }
             return ResponseEntity.ok("Booking confirmed successfully");
         } else {

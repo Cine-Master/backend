@@ -3,12 +3,11 @@ package com.cinemaster.backend.controller.admin;
 import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.EventsNotCreatedException;
 import com.cinemaster.backend.core.exception.ForbiddenException;
+import com.cinemaster.backend.core.exception.RoomNotFoundException;
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
-import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
-import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
-import com.cinemaster.backend.data.dto.EventDto;
-import com.cinemaster.backend.data.dto.ShowDto;
+import com.cinemaster.backend.data.dto.*;
 import com.cinemaster.backend.data.service.EventService;
+import com.cinemaster.backend.data.service.RoomService;
 import com.cinemaster.backend.data.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,9 @@ public class AdminEventController {
     @Autowired
     private ShowService showService;
 
+    @Autowired
+    private RoomService roomService;
+
     @GetMapping("")
     public ResponseEntity eventList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
@@ -50,14 +52,15 @@ public class AdminEventController {
             while (index.isBefore(eventCreationParams.getEndDate().plusDays(1))) {
                 for (LocalTime startTime : eventCreationParams.getStartTimes()) {
                     EventDto eventDto = new EventDto();
-                    eventDto.setShow(eventCreationParams.getShow());
-                    eventDto.setRoom(eventCreationParams.getRoom());
+                    ShowDto show = showService.findById(eventCreationParams.getShow().getId()).orElseThrow(() -> new ShowNotFoundException());
+                    RoomDto room = roomService.findById(eventCreationParams.getRoom().getId()).orElseThrow(() -> new RoomNotFoundException());
+                    show.setComingSoon(false);
+                    showService.update(show);
+                    eventDto.setShow(show);
+                    eventDto.setRoom(room);
                     eventDto.setPrice(eventCreationParams.getPrice());
                     eventDto.setDate(index);
                     eventDto.setStartTime(startTime);
-                    ShowDto show = showService.findById(eventCreationParams.getShow().getId()).orElseThrow(() -> new ShowNotFoundException());
-                    show.setComingSoon(false);
-                    showService.save(show);
                     LocalTime endTime = startTime.plusMinutes(show.getLength());
                     eventDto.setEndTime(endTime);
                     Optional<EventDto> optional = eventService.save(eventDto);
@@ -80,29 +83,4 @@ public class AdminEventController {
             throw new ForbiddenException();
         }
     }
-
-
-//    // TODO: business logic, how to manage when changing something important (tickets refund?)
-//    @PutMapping("")
-//    public ResponseEntity showEdit(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
-//        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-//        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-//            showService.update(showDto);
-//            return ResponseEntity.ok(showDto);
-//        } else {
-//            throw new ForbiddenException();
-//        }
-//    }
-//
-//    @DeleteMapping("")
-//    public ResponseEntity showDelete(@RequestBody ShowDto showDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
-//        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-//        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-//            showService.delete(showDto);
-//            return ResponseEntity.ok("Successfully deleted");
-//        } else {
-//            throw new ForbiddenException();
-//        }
-//    }
-
 }

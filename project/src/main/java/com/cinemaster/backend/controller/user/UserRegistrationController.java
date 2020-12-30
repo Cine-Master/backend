@@ -23,7 +23,7 @@ public class UserRegistrationController {
     private ModelMapper modelMapper;
 
     @PostMapping("")
-    public ResponseEntity registration(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) {
+    public ResponseEntity registration(@RequestBody UserDto userDto) {
         userDto.setHashedPassword(DigestUtils.sha256Hex(userDto.getHashedPassword()));
         accountService.save(userDto);
         UserPasswordLessDto userPasswordLessDto = modelMapper.map(userDto, UserPasswordLessDto.class);

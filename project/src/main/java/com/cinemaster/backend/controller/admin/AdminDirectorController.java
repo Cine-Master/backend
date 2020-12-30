@@ -2,7 +2,6 @@ package com.cinemaster.backend.controller.admin;
 
 import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.ForbiddenException;
-import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
 import com.cinemaster.backend.data.dto.DirectorDto;
@@ -33,12 +32,8 @@ public class AdminDirectorController {
     public ResponseEntity directorAdd(@RequestBody DirectorDto directorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            try {
-                directorService.save(directorDto);
-                return ResponseEntity.ok(directorDto);
-            } catch (RuntimeException e) {
-                throw new InvalidDataException();
-            }
+            directorService.save(directorDto);
+            return ResponseEntity.ok(directorDto);
         } else {
             throw new ForbiddenException();
         }
@@ -48,12 +43,8 @@ public class AdminDirectorController {
     public ResponseEntity directorEdit(@RequestBody DirectorDto directorDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
-            try {
-                directorService.update(directorDto);
-                return ResponseEntity.ok(directorDto);
-            } catch (RuntimeException e) {
-                throw new InvalidDataException();
-            }
+            directorService.update(directorDto);
+            return ResponseEntity.ok(directorDto);
         } else {
             throw new ForbiddenException();
         }

@@ -1,5 +1,8 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.core.exception.ActorAlreadyPresentException;
+import com.cinemaster.backend.core.exception.ActorNotFoundException;
+import com.cinemaster.backend.core.exception.InvalidDataException;
 import com.cinemaster.backend.data.dao.ActorDao;
 import com.cinemaster.backend.data.dto.ActorDto;
 import com.cinemaster.backend.data.entity.Actor;
@@ -24,16 +27,32 @@ public class ActorServiceImpl implements ActorService {
     private ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public void save(ActorDto actorDto) {
-        Actor actor = modelMapper.map(actorDto, Actor.class);
-        actorDao.saveAndFlush(actor);
-        actorDto.setId(actor.getId());
+        List<Actor> actors = actorDao.findAllByName(actorDto.getName());
+        if (actors.isEmpty()) {
+            Actor actor = modelMapper.map(actorDto, Actor.class);
+            actorDao.saveAndFlush(actor);
+            actorDto.setId(actor.getId());
+        } else {
+            throw new ActorAlreadyPresentException();
+        }
     }
 
     @Override
+    @Transactional
     public void update(ActorDto actorDto) {
-        Actor actor = modelMapper.map(actorDto, Actor.class);
-        actorDao.saveAndFlush(actor);
+        Optional<Actor> optional = actorDao.findById(actorDto.getId());
+        if (!(optional.isPresent())) {
+            throw new ActorNotFoundException();
+        }
+        List<Actor> actors = actorDao.findAllByName(actorDto.getName());
+        if (actors.isEmpty()) {
+            Actor actor = modelMapper.map(actorDto, Actor.class);
+            actorDao.saveAndFlush(actor);
+        } else {
+            throw new ActorAlreadyPresentException();
+        }
     }
 
     @Override
@@ -46,6 +65,8 @@ public class ActorServiceImpl implements ActorService {
                 show.getActors().remove(actor);
             }
             actorDao.delete(actor);
+        } else {
+            throw new ActorNotFoundException();
         }
     }
 

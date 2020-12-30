@@ -1,8 +1,10 @@
 package com.cinemaster.backend.data.service.impl;
 
-import com.cinemaster.backend.data.dao.CategoryDao;
-import com.cinemaster.backend.data.dao.EventDao;
-import com.cinemaster.backend.data.dao.ShowDao;
+import com.cinemaster.backend.core.exception.ActorNotFoundException;
+import com.cinemaster.backend.core.exception.CategoryNotFoundException;
+import com.cinemaster.backend.core.exception.DirectorNotFoundException;
+import com.cinemaster.backend.core.exception.ShowNotFoundException;
+import com.cinemaster.backend.data.dao.*;
 import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.entity.Event;
 import com.cinemaster.backend.data.entity.Show;
@@ -29,28 +31,55 @@ public class ShowServiceImpl implements ShowService {
     private EventDao eventDao;
 
     @Autowired
+    private ActorDao actorDao;
+
+    @Autowired
     private CategoryDao categoryDao;
+
+    @Autowired
+    private DirectorDao directorDao;
 
     @Autowired
     private ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public void save(ShowDto showDto) {
+        if (!(actorDao.findById(showDto.getId()).isPresent())) {
+            throw new ActorNotFoundException();
+        }
+        if (!(categoryDao.findById(showDto.getId()).isPresent())) {
+            throw new CategoryNotFoundException();
+        }
+        if (!(directorDao.findById(showDto.getId()).isPresent())) {
+            throw new DirectorNotFoundException();
+        }
         Show show = modelMapper.map(showDto, Show.class);
         showDao.saveAndFlush(show);
         showDto.setId(show.getId());
     }
 
     @Override
+    @Transactional
     public void update(ShowDto showDto) {
+        if (!(actorDao.findById(showDto.getId()).isPresent())) {
+            throw new ActorNotFoundException();
+        }
+        if (!(categoryDao.findById(showDto.getId()).isPresent())) {
+            throw new CategoryNotFoundException();
+        }
+        if (!(directorDao.findById(showDto.getId()).isPresent())) {
+            throw new DirectorNotFoundException();
+        }
         Show show = modelMapper.map(showDto, Show.class);
         showDao.saveAndFlush(show);
     }
 
+    // TODO empty for now
     @Override
+    @Transactional
     public void delete(ShowDto showDto) {
-        Show show = modelMapper.map(showDto, Show.class);
-        showDao.delete(show);
+
     }
 
     @Override
@@ -58,8 +87,9 @@ public class ShowServiceImpl implements ShowService {
         Optional<Show> optional = showDao.findById(id);
         if (optional.isPresent()) {
             return optional.map(show -> modelMapper.map(show, ShowDto.class));
+        } else {
+            throw new ShowNotFoundException();
         }
-        return Optional.empty();
     }
 
     @Override
@@ -77,7 +107,7 @@ public class ShowServiceImpl implements ShowService {
     @Transactional
     public List<ShowDto> findAllByEventBeforeNextWeek() {
         List<Show> shows = new ArrayList<>();
-        for (Event event:eventDao.findAllByDateAfterAndDateBefore(LocalDate.now(), LocalDate.now().plusDays(7))) {
+        for (Event event : eventDao.findAllByDateAfterAndDateBefore(LocalDate.now(), LocalDate.now().plusDays(7))) {
             if (!(shows.contains(event.getShow()))) {
                 shows.add(event.getShow());
             }

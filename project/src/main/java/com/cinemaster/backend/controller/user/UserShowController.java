@@ -38,7 +38,8 @@ public class UserShowController {
             @RequestParam(value = "id", required = true) Long id) {
         Optional<ShowDto> optional = showService.findById(id);
         if (optional.isPresent()) {
-            return ResponseEntity.ok(showService.findById(id));
+            ShowDto show = optional.get();
+            return ResponseEntity.ok(show);
         } else {
             throw new ShowNotFoundException();
         }
