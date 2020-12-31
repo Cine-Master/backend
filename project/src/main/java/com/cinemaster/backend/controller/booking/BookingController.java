@@ -45,21 +45,23 @@ public class BookingController {
     @PostMapping("/select")
     public ResponseEntity selectBooking(
             @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
-            @RequestBody BookingCreationParams bookingCreationParams) {
+            @RequestBody List<BookingCreationParams> bookingCreationParamsList) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
             List<BookingDto> bookings = new ArrayList<>();
             try {
-                for (SeatDto seat : bookingCreationParams.getSeats()) {
-                    BookingDto bookingDto = new BookingDto();
-                    bookingDto.setEvent(bookingCreationParams.getEvent());
-                    bookingDto.setSeat(seat);
-                    bookingDto.setUser(modelMapper.map(accountDto, UserPasswordLessDto.class));
-                    bookingDto.setPayed(false);
-                    bookingDto.setExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
-                    bookingDto.setPrice(0D);
-                    bookingService.save(bookingDto);
-                    bookings.add(bookingDto);
+                for (BookingCreationParams bookingCreationParams : bookingCreationParamsList) {
+                    for (SeatDto seat : bookingCreationParams.getSeats()) {
+                        BookingDto bookingDto = new BookingDto();
+                        bookingDto.setEvent(bookingCreationParams.getEvent());
+                        bookingDto.setSeat(seat);
+                        bookingDto.setUser(modelMapper.map(accountDto, UserPasswordLessDto.class));
+                        bookingDto.setPayed(false);
+                        bookingDto.setExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
+                        bookingDto.setPrice(0D);
+                        bookingService.save(bookingDto);
+                        bookings.add(bookingDto);
+                    }
                 }
             } catch (EventNotFoundException | RoomNotFoundException | SeatNotFoundException | InvalidDataException | BookingAlreadyPresentException e) {
                 for (BookingDto bookingDto : bookings) {
