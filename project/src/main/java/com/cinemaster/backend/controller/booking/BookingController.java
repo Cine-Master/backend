@@ -67,7 +67,7 @@ public class BookingController {
                 }
                 throw e;
             }
-            return ResponseEntity.ok("Booked successfully");
+            return ResponseEntity.ok(bookings);
         } else {
             throw new ForbiddenException();
         }
