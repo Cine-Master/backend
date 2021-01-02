@@ -5,6 +5,9 @@ import com.cinemaster.backend.core.exception.CategoryNotFoundException;
 import com.cinemaster.backend.core.exception.DirectorNotFoundException;
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
 import com.cinemaster.backend.data.dao.*;
+import com.cinemaster.backend.data.dto.ActorDto;
+import com.cinemaster.backend.data.dto.CategoryDto;
+import com.cinemaster.backend.data.dto.DirectorDto;
 import com.cinemaster.backend.data.dto.ShowDto;
 import com.cinemaster.backend.data.entity.Event;
 import com.cinemaster.backend.data.entity.Show;
@@ -45,14 +48,20 @@ public class ShowServiceImpl implements ShowService {
     @Override
     @Transactional
     public void save(ShowDto showDto) {
-        if (!(actorDao.findById(showDto.getId()).isPresent())) {
-            throw new ActorNotFoundException();
+        for (ActorDto actor : showDto.getActors()) {
+            if (!(actorDao.findById(actor.getId()).isPresent())) {
+                throw new ActorNotFoundException();
+            }
         }
-        if (!(categoryDao.findById(showDto.getId()).isPresent())) {
-            throw new CategoryNotFoundException();
+        for (CategoryDto category : showDto.getCategories()) {
+            if (!(categoryDao.findById(category.getId()).isPresent())) {
+                throw new CategoryNotFoundException();
+            }
         }
-        if (!(directorDao.findById(showDto.getId()).isPresent())) {
-            throw new DirectorNotFoundException();
+        for (DirectorDto director : showDto.getDirectors()) {
+            if (!(directorDao.findById(director.getId()).isPresent())) {
+                throw new DirectorNotFoundException();
+            }
         }
         Show show = modelMapper.map(showDto, Show.class);
         showDao.saveAndFlush(show);
@@ -62,14 +71,20 @@ public class ShowServiceImpl implements ShowService {
     @Override
     @Transactional
     public void update(ShowDto showDto) {
-        if (!(actorDao.findById(showDto.getId()).isPresent())) {
-            throw new ActorNotFoundException();
+        for (ActorDto actor : showDto.getActors()) {
+            if (!(actorDao.findById(actor.getId()).isPresent())) {
+                throw new ActorNotFoundException();
+            }
         }
-        if (!(categoryDao.findById(showDto.getId()).isPresent())) {
-            throw new CategoryNotFoundException();
+        for (CategoryDto category : showDto.getCategories()) {
+            if (!(categoryDao.findById(category.getId()).isPresent())) {
+                throw new CategoryNotFoundException();
+            }
         }
-        if (!(directorDao.findById(showDto.getId()).isPresent())) {
-            throw new DirectorNotFoundException();
+        for (DirectorDto director : showDto.getDirectors()) {
+            if (!(directorDao.findById(director.getId()).isPresent())) {
+                throw new DirectorNotFoundException();
+            }
         }
         Show show = modelMapper.map(showDto, Show.class);
         showDao.saveAndFlush(show);
