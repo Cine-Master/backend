@@ -54,16 +54,22 @@ public class BookingServiceImpl implements BookingService {
         }
         List<Booking> bookings = bookingDao.findAllByEventAndSeat(booking.getEvent(), booking.getSeat());
         if (bookings.isEmpty()) {
-            bookingDao.save(booking);
+            bookingDao.saveAndFlush(booking);
             bookingDto.setId(booking.getId());
         } else {
             throw new BookingAlreadyPresentException();
         }
     }
 
-    // TODO empty
     @Override
     public void update(BookingDto bookingDto) {
+        Booking booking = bookingDao.findById(bookingDto.getId()).orElseThrow(() -> new BookingNotFoundException());
+        if (booking.getPayed()) {
+            throw new BookingAlreadyPayedException();
+        } else {
+            booking = modelMapper.map(bookingDto, Booking.class);
+            bookingDao.saveAndFlush(booking);
+        }
     }
 
     @Override

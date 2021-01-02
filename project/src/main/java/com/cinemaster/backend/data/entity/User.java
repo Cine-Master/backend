@@ -27,6 +27,9 @@ public class User extends Account {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Booking> bookings;
 
+    @OneToMany(mappedBy = "user")
+    private List<Coupon> coupons;
+
     public String getFirstName() {
         return firstName;
     }
@@ -73,6 +76,14 @@ public class User extends Account {
 
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
+    }
+
+    public List<Coupon> getCoupons() {
+        return coupons;
+    }
+
+    public void setCoupons(List<Coupon> coupons) {
+        this.coupons = coupons;
     }
 
     public enum Gender {MALE, FEMALE, OTHER}

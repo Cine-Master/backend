@@ -4,6 +4,7 @@ import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dto.*;
 import com.cinemaster.backend.data.service.BookingService;
+import com.cinemaster.backend.data.service.CouponService;
 import com.cinemaster.backend.data.service.EventService;
 import com.cinemaster.backend.data.service.SeatService;
 import com.cinemaster.backend.email.EmailService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/booking")
@@ -34,6 +36,9 @@ public class BookingController {
     private EventService eventService;
 
     @Autowired
+    private CouponService couponService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -41,6 +46,30 @@ public class BookingController {
 
     @Autowired
     private PdfService pdfService;
+
+    @PostMapping("/coupon")
+    public ResponseEntity validateCoupon(
+            @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
+            @RequestBody String code) {
+        System.out.println(code);
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
+            Optional<CouponDto> optional = couponService.findByCode(code);
+            if (!(optional.isPresent())) {
+                throw new CouponNotFoundException();
+            }
+            CouponDto coupon = optional.get();
+            if (!(couponService.findAllByUserId(accountDto.getId()).contains(coupon))) {
+                throw new CouponNotFoundException();
+            } else {
+                coupon.setUsed(true);
+                couponService.update(coupon);
+                return ResponseEntity.ok(optional.get().getValue());
+            }
+        } else {
+            throw new ForbiddenException();
+        }
+    }
 
     @PostMapping("/select")
     public ResponseEntity selectBooking(
@@ -105,6 +134,7 @@ public class BookingController {
                 // TODO inviare un messaggio più bello, con i dettagli dell'ordine
                 emailService.sendTicketEmail(((UserPasswordLessDto) accountDto).getEmail(), ticket, ticketPath);
             }
+            couponService.deleteAllByUserIdAndIsUsed(accountDto.getId());
             return ResponseEntity.ok("Booking confirmed successfully");
         } else {
             throw new ForbiddenException();
