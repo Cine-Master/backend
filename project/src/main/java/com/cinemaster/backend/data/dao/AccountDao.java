@@ -10,4 +10,7 @@ public interface AccountDao extends JpaRepository<Account, Long>, JpaSpecificati
 
     Optional<Account> findByUsernameAndHashedPassword(String username, String hashedPassword);
 
+    Optional<Account> findByUsername(String username);
+
+    Optional<Account> findByUsernameAndIdNot(String username, Long id);
 }
