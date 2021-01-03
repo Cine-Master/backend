@@ -147,4 +147,36 @@ public class BookingController {
         }
     }
 
+    @PostMapping("/remove")
+    public ResponseEntity removeBooking(
+            @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
+            @RequestBody BookingDto[] bookings) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
+            for (BookingDto dto : bookings) {
+
+                BookingDto booking = bookingService.findById(dto.getId()).orElseThrow(() -> new BookingNotFoundException());
+                if (booking.getUser().getId() != accountDto.getId()) {
+                    throw new BookingNotFoundException();
+                }
+                bookingService.delete(booking);
+                TicketDto ticket = ticketService.findByBookingId(dto.getId()).orElseThrow(() -> new BookingNotFoundException());
+                ticketService.delete(ticket);
+
+                CouponDto coupon = new CouponDto();
+                coupon.setUser((UserPasswordLessDto) accountDto);
+                coupon.setUsed(false);
+                coupon.setValue(booking.getPrice());
+                coupon.setCode(couponService.generateCouponCode());
+                couponService.save(coupon);
+
+                // TODO inviare un messaggio più bello, con i dettagli del coupon
+                emailService.sendCouponEmail(((UserPasswordLessDto) accountDto).getEmail(), booking.getId(), coupon);
+            }
+            return ResponseEntity.ok("Booking deleted successfully");
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
 }

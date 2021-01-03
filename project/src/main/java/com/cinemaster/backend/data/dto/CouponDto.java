@@ -12,7 +12,7 @@ public class CouponDto {
 
     private Boolean used;
 
-    private UserDto user;
+    private UserPasswordLessDto user;
 
     public Long getId() {
         return id;
@@ -46,11 +46,11 @@ public class CouponDto {
         this.used = used;
     }
 
-    public UserDto getUser() {
+    public UserPasswordLessDto getUser() {
         return user;
     }
 
-    public void setUser(UserDto user) {
+    public void setUser(UserPasswordLessDto user) {
         this.user = user;
     }
 
