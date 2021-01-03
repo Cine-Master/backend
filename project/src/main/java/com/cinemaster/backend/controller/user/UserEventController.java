@@ -24,7 +24,7 @@ public class UserEventController {
     @GetMapping("")
     public ResponseEntity eventOfShowList(
             @RequestParam(value = "id", required = true) Long id) {
-        List<EventDto> events = eventService.findAllByShowId(id);
+        List<EventDto> events = eventService.findAllByShowIdAfterNow(id);
         return ResponseEntity.ok(events);
     }
 

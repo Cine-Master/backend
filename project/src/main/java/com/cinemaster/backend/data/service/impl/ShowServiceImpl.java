@@ -90,11 +90,11 @@ public class ShowServiceImpl implements ShowService {
         showDao.saveAndFlush(show);
     }
 
-    // TODO empty for now
     @Override
     @Transactional
     public void delete(ShowDto showDto) {
-
+        Show show = modelMapper.map(showDto, Show.class);
+        showDao.delete(show);
     }
 
     @Override

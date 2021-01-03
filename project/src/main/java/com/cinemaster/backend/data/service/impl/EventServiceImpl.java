@@ -107,10 +107,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public List<EventDto> findAllByShowId(Long id) {
+    public List<EventDto> findAllByShowIdAfterNow(Long id) {
         if (!(showDao.findById(id).isPresent())) {
             throw new ShowNotFoundException();
         }
         return eventDao.findAllByShowIdAndDateAfter(id, LocalDate.now()).stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<EventDto> findAllByShowId(Long id) {
+        if (!(showDao.findById(id).isPresent())) {
+            throw new ShowNotFoundException();
+        }
+        return eventDao.findAllByShowId(id).stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
     }
 }

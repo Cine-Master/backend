@@ -13,4 +13,6 @@ public interface EventDao extends JpaRepository<Event, Long>, JpaSpecificationEx
 
     List<Event> findAllByDateAfterAndDateBefore(LocalDate start, LocalDate end);
 
+    List<Event> findAllByShowId(Long id);
+
 }
