@@ -1,6 +1,6 @@
 package com.cinemaster.backend.data.service.impl;
 
-import com.cinemaster.backend.controller.booking.Ticket;
+import com.cinemaster.backend.data.dto.TicketDto;
 import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dao.BookingDao;
 import com.cinemaster.backend.data.dao.EventDao;
@@ -117,23 +117,5 @@ public class BookingServiceImpl implements BookingService {
             seats.add(booking.getSeat());
         }
         return seats;
-    }
-
-    @Override
-    public List<Ticket> findAllByUserId(Long id) {
-        List<Ticket> tickets = new ArrayList<>();
-        for (BookingDto booking : bookingDao.findAllByUserId(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList())) {
-            Ticket ticket = new Ticket();
-            ticket.setBookingId(booking.getId());
-            ticket.setUserName(booking.getUser().getFirstName() + " " + booking.getUser().getLastName());
-            ticket.setShowName(booking.getEvent().getShow().getName());
-            ticket.setRoomName(booking.getEvent().getRoom().getName());
-            ticket.setSeat(booking.getSeat().getRow() + booking.getSeat().getColumn() + " - " + booking.getSeat().getSeatType());
-            ticket.setDate(booking.getEvent().getDate());
-            ticket.setStartTime(booking.getEvent().getStartTime());
-            ticket.setPrice(booking.getPrice());
-            tickets.add(ticket);
-        }
-        return tickets;
     }
 }

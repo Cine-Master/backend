@@ -1,6 +1,6 @@
 package com.cinemaster.backend.email.impl;
 
-import com.cinemaster.backend.controller.booking.Ticket;
+import com.cinemaster.backend.data.dto.TicketDto;
 import com.cinemaster.backend.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -19,7 +19,7 @@ public class EmailServiceImpl implements EmailService {
     private JavaMailSender emailSender;
 
     @Override
-    public void sendTicketEmail(String to, Ticket ticket, String pathToAttachment) {
+    public void sendTicketEmail(String to, TicketDto ticketDto, String pathToAttachment) {
         try {
             MimeMessage message = emailSender.createMimeMessage();
 
@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setFrom(EMAIL_ADDRESS);
             helper.setTo(to);
-            String subject = String.format("Prenotazione #%d confermata", ticket.getBookingId());
+            String subject = String.format("Prenotazione #%d confermata", ticketDto.getBookingId());
             String text = "In allegato può trovare il biglietto. Si prega di stamparlo ed esporlo all'ingresso prima dell'evento.\nLa ringraziamo per averci scelto!";
             helper.setSubject(subject);
             helper.setText(text);

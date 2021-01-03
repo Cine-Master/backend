@@ -1,12 +1,14 @@
-package com.cinemaster.backend.controller.booking;
+package com.cinemaster.backend.data.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Ticket {
+public class TicketDto {
 
     private Long bookingId;
+
+    private String barcode;
 
     private String userName;
 
@@ -21,6 +23,22 @@ public class Ticket {
     private LocalTime startTime;
 
     private Double price;
+
+    public Long getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
 
     public String getUserName() {
         return userName;
@@ -78,14 +96,6 @@ public class Ticket {
         this.price = price;
     }
 
-    public Long getBookingId() {
-        return bookingId;
-    }
-
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
-    }
-
     public String generateBarcodeEAN13() {
         Long barcode = Math.abs(hashCode()) % 1000000000000L;
         int length = barcode.toString().length();
@@ -97,15 +107,15 @@ public class Ticket {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Ticket ticket = (Ticket) o;
-        return bookingId.equals(ticket.bookingId) &&
-                userName.equals(ticket.userName) &&
-                showName.equals(ticket.showName) &&
-                roomName.equals(ticket.roomName) &&
-                seat.equals(ticket.seat) &&
-                date.equals(ticket.date) &&
-                startTime.equals(ticket.startTime) &&
-                price.equals(ticket.price);
+        TicketDto ticketDto = (TicketDto) o;
+        return bookingId.equals(ticketDto.bookingId) &&
+                userName.equals(ticketDto.userName) &&
+                showName.equals(ticketDto.showName) &&
+                roomName.equals(ticketDto.roomName) &&
+                seat.equals(ticketDto.seat) &&
+                date.equals(ticketDto.date) &&
+                startTime.equals(ticketDto.startTime) &&
+                price.equals(ticketDto.price);
     }
 
     @Override

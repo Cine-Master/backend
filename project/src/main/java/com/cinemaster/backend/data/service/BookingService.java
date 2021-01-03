@@ -1,6 +1,5 @@
 package com.cinemaster.backend.data.service;
 
-import com.cinemaster.backend.controller.booking.Ticket;
 import com.cinemaster.backend.data.dto.BookingDto;
 import com.cinemaster.backend.data.dto.SeatDto;
 
@@ -23,5 +22,4 @@ public interface BookingService {
 
     List<SeatDto> findBookedSeatsByEventId(Long id);
 
-    List<Ticket> findAllByUserId(Long id);
 }

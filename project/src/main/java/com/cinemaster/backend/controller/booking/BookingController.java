@@ -3,10 +3,7 @@ package com.cinemaster.backend.controller.booking;
 import com.cinemaster.backend.controller.login.CookieMap;
 import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dto.*;
-import com.cinemaster.backend.data.service.BookingService;
-import com.cinemaster.backend.data.service.CouponService;
-import com.cinemaster.backend.data.service.EventService;
-import com.cinemaster.backend.data.service.SeatService;
+import com.cinemaster.backend.data.service.*;
 import com.cinemaster.backend.email.EmailService;
 import com.cinemaster.backend.pdf.PdfService;
 import org.modelmapper.ModelMapper;
@@ -37,6 +34,9 @@ public class BookingController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private TicketService ticketService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -120,19 +120,25 @@ public class BookingController {
                 EventDto event = eventService.findById(booking.getEvent().getId()).orElseThrow(() -> new EventNotFoundException());
                 SeatDto seat = seatService.findById(booking.getSeat().getId()).orElseThrow(() -> new SeatNotFoundException());
 
-                Ticket ticket = new Ticket();
-                ticket.setBookingId(booking.getId());
-                ticket.setUserName(((UserPasswordLessDto) accountDto).getFirstName() + " " + ((UserPasswordLessDto) accountDto).getLastName());
-                ticket.setShowName(event.getShow().getName());
-                ticket.setRoomName(event.getRoom().getName());
-                ticket.setSeat(seat.getRow() + seat.getColumn() + " - " + seat.getSeatType());
-                ticket.setDate(event.getDate());
-                ticket.setStartTime(event.getStartTime());
-                ticket.setPrice(booking.getPrice());
+                TicketDto ticketDto = new TicketDto();
+                ticketDto.setBookingId(booking.getId());
+                ticketDto.setUserName(((UserPasswordLessDto) accountDto).getFirstName() + " " + ((UserPasswordLessDto) accountDto).getLastName());
+                ticketDto.setShowName(event.getShow().getName());
+                ticketDto.setRoomName(event.getRoom().getName());
+                ticketDto.setSeat(seat.getRow() + seat.getColumn() + " - " + seat.getSeatType());
+                ticketDto.setDate(event.getDate());
+                ticketDto.setStartTime(event.getStartTime());
+                ticketDto.setPrice(booking.getPrice());
+                String barcode;
+                do {
+                    barcode = ticketDto.generateBarcodeEAN13();
+                } while (ticketService.findByBarcode(barcode).isPresent());
+                ticketDto.setBarcode(barcode);
+                ticketService.save(ticketDto);
 
-                String ticketPath = pdfService.createPdf(ticket);
+                String ticketPath = pdfService.createPdf(ticketDto);
                 // TODO inviare un messaggio più bello, con i dettagli dell'ordine
-                emailService.sendTicketEmail(((UserPasswordLessDto) accountDto).getEmail(), ticket, ticketPath);
+                emailService.sendTicketEmail(((UserPasswordLessDto) accountDto).getEmail(), ticketDto, ticketPath);
             }
             couponService.deleteAllByUserIdAndIsUsed(accountDto.getId());
             return ResponseEntity.ok("Booking confirmed successfully");

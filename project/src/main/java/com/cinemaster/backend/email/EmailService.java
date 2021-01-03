@@ -1,11 +1,11 @@
 package com.cinemaster.backend.email;
 
-import com.cinemaster.backend.controller.booking.Ticket;
+import com.cinemaster.backend.data.dto.TicketDto;
 
 public interface EmailService {
 
     String EMAIL_ADDRESS = "cinemaster.ricca@gmail.com";
 
-    void sendTicketEmail(String to, Ticket ticket, String pathToAttachment);
+    void sendTicketEmail(String to, TicketDto ticketDto, String pathToAttachment);
 
 }
