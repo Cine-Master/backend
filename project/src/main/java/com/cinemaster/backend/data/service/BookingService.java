@@ -22,4 +22,6 @@ public interface BookingService {
 
     List<SeatDto> findBookedSeatsByEventId(Long id);
 
+    List<BookingDto> findAllByEventId(Long id);
+
 }

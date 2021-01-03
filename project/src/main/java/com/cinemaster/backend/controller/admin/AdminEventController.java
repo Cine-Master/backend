@@ -6,6 +6,7 @@ import com.cinemaster.backend.core.exception.ForbiddenException;
 import com.cinemaster.backend.core.exception.RoomNotFoundException;
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
 import com.cinemaster.backend.data.dto.*;
+import com.cinemaster.backend.data.service.BookingService;
 import com.cinemaster.backend.data.service.EventService;
 import com.cinemaster.backend.data.service.RoomService;
 import com.cinemaster.backend.data.service.ShowService;
@@ -32,6 +33,9 @@ public class AdminEventController {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private BookingService bookingService;
 
     @GetMapping("")
     public ResponseEntity eventList(@CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
@@ -79,6 +83,28 @@ public class AdminEventController {
                 }
                 throw new EventsNotCreatedException(stringBuilder.toString());
             }
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    @PutMapping("")
+    public ResponseEntity eventEdit(@RequestBody EventDto eventDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
+            eventService.update(eventDto);
+            return ResponseEntity.ok(eventDto);
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity eventDelete(@RequestBody EventDto eventDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
+            eventService.delete(eventDto);
+            return ResponseEntity.ok("Successfully deleted");
         } else {
             throw new ForbiddenException();
         }

@@ -1,5 +1,6 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.data.dto.EventDto;
 import com.cinemaster.backend.data.dto.TicketDto;
 import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dao.BookingDao;
@@ -117,5 +118,14 @@ public class BookingServiceImpl implements BookingService {
             seats.add(booking.getSeat());
         }
         return seats;
+    }
+
+    @Override
+    @Transactional
+    public List<BookingDto> findAllByEventId(Long id) {
+        if (!(eventDao.findById(id).isPresent())) {
+            throw new EventNotFoundException();
+        }
+        return bookingDao.findAllByEventId(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
     }
 }

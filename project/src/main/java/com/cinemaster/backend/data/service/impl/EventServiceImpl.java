@@ -1,13 +1,14 @@
 package com.cinemaster.backend.data.service.impl;
 
-import com.cinemaster.backend.core.exception.ShowNotFoundException;
+import com.cinemaster.backend.core.exception.*;
+import com.cinemaster.backend.data.dao.BookingDao;
 import com.cinemaster.backend.data.dao.EventDao;
+import com.cinemaster.backend.data.dao.RoomDao;
 import com.cinemaster.backend.data.dao.ShowDao;
 import com.cinemaster.backend.data.dto.EventDto;
 import com.cinemaster.backend.data.entity.Event;
 import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.service.EventService;
-import com.cinemaster.backend.data.service.ShowService;
 import com.cinemaster.backend.data.specification.EventSpecification;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +28,12 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private ShowDao showDao;
+
+    @Autowired
+    private RoomDao roomDao;
+
+    @Autowired
+    private BookingDao bookingDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -46,16 +52,43 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    // TODO empty
     @Override
+    @Transactional
     public void update(EventDto eventDto) {
-
+        if (!(eventDao.findById(eventDto.getId()).isPresent())) {
+            throw new EventNotFoundException();
+        }
+        if (!(showDao.findById(eventDto.getShow().getId()).isPresent())) {
+            throw new ShowNotFoundException();
+        }
+        if (!(roomDao.findById(eventDto.getRoom().getId()).isPresent())) {
+            throw new RoomNotFoundException();
+        }
+        if (bookingDao.findAllByEventId(eventDto.getId()).isEmpty()) {
+            List<Event> events = eventDao.findAll(EventSpecification.findAllBy(modelMapper.map(eventDto.getRoom(), Room.class), eventDto.getDate(), eventDto.getStartTime(), eventDto.getEndTime()));
+            if (events.isEmpty() || (events.size() == 1 && events.get(0).getId() == eventDto.getId())) {
+                Event event = modelMapper.map(eventDto, Event.class);
+                eventDao.saveAndFlush(event);
+            } else {
+                throw new EventAlreadyPresentException();
+            }
+        } else {
+            throw new BookingsPresentException();
+        }
     }
 
-    // TODO empty
     @Override
+    @Transactional
     public void delete(EventDto eventDto) {
-
+        if (!(eventDao.findById(eventDto.getId()).isPresent())) {
+            throw new EventNotFoundException();
+        }
+        if (bookingDao.findAllByEventId(eventDto.getId()).isEmpty()) {
+            Event event = modelMapper.map(eventDto, Event.class);
+            eventDao.delete(event);
+        } else {
+            throw new BookingsPresentException();
+        }
     }
 
     @Override
