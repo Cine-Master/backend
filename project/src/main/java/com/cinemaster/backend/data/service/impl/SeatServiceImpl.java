@@ -22,25 +22,6 @@ public class SeatServiceImpl implements SeatService {
     private ModelMapper modelMapper;
 
     @Override
-    public void save(SeatDto seatDto) {
-        Seat seat = modelMapper.map(seatDto, Seat.class);
-        seatDao.save(seat);
-        seatDto.setId(seat.getId());
-    }
-
-    // TODO Come la delete?
-    @Override
-    public void update(SeatDto seatDto) {
-        Seat seat = modelMapper.map(seatDto, Seat.class);
-        seatDao.save(seat);
-    }
-
-    @Override
-    public void delete(SeatDto seatDto) {
-// TODO mo vediamo
-    }
-
-    @Override
     public Optional<SeatDto> findById(Long id) {
         Optional<Seat> optional = seatDao.findById(id);
         if (optional.isPresent()) {

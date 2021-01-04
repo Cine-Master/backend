@@ -1,6 +1,9 @@
 package com.cinemaster.backend.data.service.impl;
 
+import com.cinemaster.backend.core.exception.BookingsPresentException;
 import com.cinemaster.backend.core.exception.RoomAlreadyPresentException;
+import com.cinemaster.backend.core.exception.RoomNotFoundException;
+import com.cinemaster.backend.data.dao.BookingDao;
 import com.cinemaster.backend.data.dao.RoomDao;
 import com.cinemaster.backend.data.dao.SeatDao;
 import com.cinemaster.backend.data.dto.RoomDto;
@@ -13,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +30,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private SeatDao seatDao;
+
+    @Autowired
+    private BookingDao bookingDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -48,16 +56,48 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
-    // TODO empty
     @Override
     @Transactional
     public void update(RoomDto roomDto) {
+        Room room = roomDao.findById(roomDto.getId()).orElseThrow(() -> new RoomNotFoundException());
+        if (!(bookingDao.findAllByEventRoomIdAndEventDateAfterOrEventRoomIdAndEventDateAndEventStartTimeAfter(room.getId(), LocalDate.now(), room.getId(), LocalDate.now(), LocalTime.now()).isEmpty())) {
+            throw new BookingsPresentException();
+        }
+        for (Seat original : room.getSeats()) {
+            boolean toDelete = true;
+            for (SeatDto seatDto : roomDto.getSeats()) {
+                if (seatDto.getId() == null) {
+                    Seat seat = modelMapper.map(seatDto, Seat.class);
+                    seat.setRoom(room);
+                    seatDao.saveAndFlush(seat);
+                    toDelete = false;
+                    break;
+                } else if (original.getId().equals(seatDto.getId())) {
+                    Seat seat = modelMapper.map(seatDto, Seat.class);
+                    seat.setRoom(room);
+                    seatDao.saveAndFlush(seat);
+                    toDelete = false;
+                    break;
+                }
+            }
+            if (toDelete) {
+                seatDao.delete(original);
+            }
+        }
+        roomDao.saveAndFlush(modelMapper.map(roomDto, Room.class));
     }
 
-    // TODO empty
     @Override
     @Transactional
     public void delete(RoomDto roomDto) {
+        Room room = roomDao.findById(roomDto.getId()).orElseThrow(() -> new RoomNotFoundException());
+        if (!(bookingDao.findAllByEventRoomIdAndEventDateAfterOrEventRoomIdAndEventDateAndEventStartTimeAfter(room.getId(), LocalDate.now(), room.getId(), LocalDate.now(), LocalTime.now()).isEmpty())) {
+            throw new BookingsPresentException();
+        }
+        for (Seat seat : room.getSeats()) {
+            seatDao.delete(seat);
+        }
+        roomDao.delete(room);
     }
 
     @Override

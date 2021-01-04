@@ -38,4 +38,26 @@ public class AdminRoomController {
             throw new ForbiddenException();
         }
     }
+
+    @PutMapping("")
+    public ResponseEntity roomEdit(@RequestBody RoomDto roomDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
+            roomService.update(roomDto);
+            return ResponseEntity.ok(roomDto);
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity roomDelete(@RequestBody RoomDto roomDto, @CookieValue(value = "sessionid", defaultValue = "") String sessionId) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof AdminPasswordLessDto) {
+            roomService.delete(roomDto);
+            return ResponseEntity.ok(roomDto);
+        } else {
+            throw new ForbiddenException();
+        }
+    }
 }

@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -103,6 +105,14 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public void deleteExpired() {
         for (Booking booking : bookingDao.findAllByExpirationBefore(LocalDateTime.now())) {
+            bookingDao.delete(booking);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteOld() {
+        for (Booking booking : bookingDao.findAllByEventDateBeforeOrEventDateAndEventEndTimeBefore(LocalDate.now(), LocalDate.now(), LocalTime.now())) {
             bookingDao.delete(booking);
         }
     }

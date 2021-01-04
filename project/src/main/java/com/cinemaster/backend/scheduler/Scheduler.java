@@ -16,4 +16,9 @@ public class Scheduler {
         bookingService.deleteExpired();
     }
 
+    @Scheduled(fixedRate = 1000 * 60)
+    public void deleteOldBookings() {
+        bookingService.deleteOld();
+    }
+
 }

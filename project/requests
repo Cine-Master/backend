@@ -143,11 +143,33 @@
     -------------------------------------------------------------------------------------------------------------------
     | MODIFICA SALA                                                                                                   |
     -------------------------------------------------------------------------------------------------------------------
-    NOT IMPLEMENTED
+    /admin/rooms PUT (inviare tutta la sala come se si dovesse fare una post. I posti presenti in origine ma non
+        presenti nella lista sotto, verranno eliminati. Se si passa un posto con id allora si va a modificare, se lo
+        si passa senza id allora lo si va ad aggiungere)
+    {
+        "id": 380,
+        "name": "Sala Gialla",
+        "nRows": 5,
+        "nColumns": 8,
+        "seats": [
+            {
+                "row": "A",
+                "column": "245",
+                "seatType": "STANDARD"
+            },
+            {
+                "id": 383,
+                "row": "A",
+                "column": "4",
+                "seatType": "STANDARD"
+            }
+        ]
+    }
     -------------------------------------------------------------------------------------------------------------------
     | ELIMINAZIONE SALA                                                                                               |
     -------------------------------------------------------------------------------------------------------------------
-    NOT IMPLEMENTED
+    /admin/rooms DELETE
+    {"id": 345}
 
 -----------------------------------------------------------------------------------------------------------------------
 | GESIONE EVENTI (ADMIN)                                                                                              |
