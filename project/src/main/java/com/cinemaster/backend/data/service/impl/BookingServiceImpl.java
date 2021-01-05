@@ -1,7 +1,5 @@
 package com.cinemaster.backend.data.service.impl;
 
-import com.cinemaster.backend.data.dto.EventDto;
-import com.cinemaster.backend.data.dto.TicketDto;
 import com.cinemaster.backend.core.exception.*;
 import com.cinemaster.backend.data.dao.BookingDao;
 import com.cinemaster.backend.data.dao.EventDao;
@@ -112,8 +110,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public void deleteOld() {
-        for (Booking booking : bookingDao.findAllByEventDateBeforeOrEventDateAndEventEndTimeBefore(LocalDate.now(), LocalDate.now(), LocalTime.now())) {
-            bookingDao.delete(booking);
+        for (Booking booking : bookingDao.findAllByEventDateBefore(LocalDate.now().plusDays(1))) {
+            if (booking.getEvent().getEndTime().isBefore(LocalTime.now())) {
+                bookingDao.delete(booking);
+            }
         }
     }
 

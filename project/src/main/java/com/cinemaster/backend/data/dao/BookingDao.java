@@ -23,6 +23,6 @@ public interface BookingDao extends JpaRepository<Booking, Long>, JpaSpecificati
 
     List<Booking> findAllByEventRoomIdAndEventDateAfterOrEventRoomIdAndEventDateAndEventStartTimeAfter(Long id, LocalDate date, Long id2, LocalDate today, LocalTime time);
 
-    List<Booking> findAllByEventDateBeforeOrEventDateAndEventEndTimeBefore(LocalDate date, LocalDate today, LocalTime time);
+    List<Booking> findAllByEventDateBefore(LocalDate date);
 
 }

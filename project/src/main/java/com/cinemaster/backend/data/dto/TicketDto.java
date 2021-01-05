@@ -3,6 +3,7 @@ package com.cinemaster.backend.data.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.Random;
 
 public class TicketDto {
 
@@ -97,7 +98,7 @@ public class TicketDto {
     }
 
     public String generateBarcodeEAN13() {
-        Long barcode = Math.abs(hashCode()) % 1000000000000L;
+        Long barcode = Math.abs(new Random().nextInt()) % 1000000000000L;
         int length = barcode.toString().length();
         barcode = (long) (barcode * Math.pow(10, 12 - length));
         return barcode.toString();
