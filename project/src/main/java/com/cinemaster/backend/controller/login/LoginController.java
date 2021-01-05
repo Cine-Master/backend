@@ -3,6 +3,7 @@ package com.cinemaster.backend.controller.login;
 import com.cinemaster.backend.core.exception.WrongCredentialsException;
 import com.cinemaster.backend.data.dto.AccountPasswordLessDto;
 import com.cinemaster.backend.data.dto.AdminPasswordLessDto;
+import com.cinemaster.backend.data.dto.CashierPasswordLessDto;
 import com.cinemaster.backend.data.dto.UserPasswordLessDto;
 import com.cinemaster.backend.data.service.AccountService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -34,6 +35,9 @@ public class LoginController {
             } else if (accountDto instanceof UserPasswordLessDto) {
                 UserPasswordLessDto userDto = (UserPasswordLessDto) accountDto;
                 return ResponseEntity.ok(userDto);
+            } else if (accountDto instanceof CashierPasswordLessDto) {
+                CashierPasswordLessDto cashierDto = (CashierPasswordLessDto) accountDto;
+                return ResponseEntity.ok(cashierDto);
             }
         }
         Optional<AccountPasswordLessDto> optional = accountService.checkCredentials(credentials.getUsername(), DigestUtils.sha256Hex(credentials.getPassword()));
@@ -54,6 +58,10 @@ public class LoginController {
                 UserPasswordLessDto userDto = (UserPasswordLessDto) dto;
                 CookieMap.getInstance().getMap().put(cookieString, userDto);
                 return ResponseEntity.ok(userDto);
+            } else if (dto instanceof CashierPasswordLessDto) {
+                CashierPasswordLessDto cashierDto = (CashierPasswordLessDto) dto;
+                CookieMap.getInstance().getMap().put(cookieString, cashierDto);
+                return ResponseEntity.ok(cashierDto);
             }
         } else {
             throw new WrongCredentialsException();

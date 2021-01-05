@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.LoggingMXBean;
 import java.util.stream.Collectors;
 
 @Service
@@ -128,8 +129,8 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public void deleteOld() {
-        for (Event event : eventDao.findAllByDateBefore(LocalDate.now())) {
-            if (event.getEndTime().isBefore(LocalTime.now())) {
+        for (Event event : eventDao.findAllByDateBefore(LocalDate.now().plusDays(1))) {
+            if (!(event.getDate().isEqual(LocalDate.now()) && event.getEndTime().isAfter(LocalTime.now()))) {
                 for (Booking booking : bookingDao.findAllByEventId(event.getId())) {
                     bookingDao.delete(booking);
                 }

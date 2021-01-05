@@ -12,6 +12,8 @@ public class BookingDto {
 
     private UserPasswordLessDto user;
 
+    private CashierPasswordLessDto cashier;
+
     private Boolean payed;
 
     private LocalDateTime expiration;
@@ -72,5 +74,13 @@ public class BookingDto {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public CashierPasswordLessDto getCashier() {
+        return cashier;
+    }
+
+    public void setCashier(CashierPasswordLessDto cashier) {
+        this.cashier = cashier;
     }
 }

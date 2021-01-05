@@ -8,6 +8,7 @@ import com.cinemaster.backend.data.dao.UserDao;
 import com.cinemaster.backend.data.dto.*;
 import com.cinemaster.backend.data.entity.Account;
 import com.cinemaster.backend.data.entity.Admin;
+import com.cinemaster.backend.data.entity.Cashier;
 import com.cinemaster.backend.data.entity.User;
 import com.cinemaster.backend.data.service.AccountService;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,8 @@ public class AccountServiceImpl implements AccountService {
                     return modelMapper.map(account, AdminPasswordLessDto.class);
                 } else if (account instanceof User) {
                     return modelMapper.map(account, UserPasswordLessDto.class);
+                } else if (account instanceof Cashier) {
+                    return modelMapper.map(account, CashierPasswordLessDto.class);
                 } else {
                     return null;
                 }

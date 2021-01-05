@@ -21,6 +21,9 @@ public class Booking {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private Cashier cashier;
+
     @Column(name = "payed", nullable = false)
     private Boolean payed;
 
@@ -84,5 +87,13 @@ public class Booking {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Cashier getCashier() {
+        return cashier;
+    }
+
+    public void setCashier(Cashier cashier) {
+        this.cashier = cashier;
     }
 }

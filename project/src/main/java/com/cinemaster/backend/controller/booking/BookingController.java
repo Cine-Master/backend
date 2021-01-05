@@ -76,7 +76,7 @@ public class BookingController {
             @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
             @RequestBody List<BookingCreationParams> bookingCreationParamsList) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-        if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
+        if (accountDto != null && (accountDto instanceof UserPasswordLessDto || accountDto instanceof CashierPasswordLessDto)) {
             List<BookingDto> bookings = new ArrayList<>();
             try {
                 for (BookingCreationParams bookingCreationParams : bookingCreationParamsList) {
@@ -84,7 +84,13 @@ public class BookingController {
                         BookingDto bookingDto = new BookingDto();
                         bookingDto.setEvent(bookingCreationParams.getEvent());
                         bookingDto.setSeat(seat);
-                        bookingDto.setUser(modelMapper.map(accountDto, UserPasswordLessDto.class));
+                        if (accountDto instanceof UserPasswordLessDto) {
+                            bookingDto.setUser(modelMapper.map(accountDto, UserPasswordLessDto.class));
+                            bookingDto.setCashier(null);
+                        } else if (accountDto instanceof CashierPasswordLessDto) {
+                            bookingDto.setCashier(modelMapper.map(accountDto, CashierPasswordLessDto.class));
+                            bookingDto.setUser(null);
+                        }
                         bookingDto.setPayed(false);
                         bookingDto.setExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
                         bookingDto.setPrice(0D);
@@ -109,7 +115,7 @@ public class BookingController {
             @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
             @RequestBody BookingConfirmationParams[] bookings) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-        if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
+        if (accountDto != null && (accountDto instanceof UserPasswordLessDto || accountDto instanceof CashierPasswordLessDto)) {
             for (BookingConfirmationParams param : bookings) {
                 BookingDto booking = bookingService.findById(param.getBooking().getId()).orElseThrow(() -> new BookingNotFoundException());
                 booking.setPayed(true);
@@ -122,7 +128,11 @@ public class BookingController {
 
                 TicketDto ticketDto = new TicketDto();
                 ticketDto.setBookingId(booking.getId());
-                ticketDto.setUserName(((UserPasswordLessDto) accountDto).getFirstName() + " " + ((UserPasswordLessDto) accountDto).getLastName());
+                if (accountDto instanceof UserPasswordLessDto) {
+                    ticketDto.setUserName(((UserPasswordLessDto) accountDto).getFirstName() + " " + ((UserPasswordLessDto) accountDto).getLastName());
+                } else if (accountDto instanceof CashierPasswordLessDto) {
+                    ticketDto.setUserName("");
+                }
                 ticketDto.setShowName(event.getShow().getName());
                 ticketDto.setRoomName(event.getRoom().getName());
                 ticketDto.setSeat(seat.getRow() + seat.getColumn() + " - " + seat.getSeatType());
@@ -137,10 +147,13 @@ public class BookingController {
                 ticketService.save(ticketDto);
 
                 String ticketPath = pdfService.createPdf(ticketDto);
-                // TODO inviare un messaggio più bello, con i dettagli dell'ordine
-                emailService.sendTicketEmail(((UserPasswordLessDto) accountDto).getEmail(), ticketDto, ticketPath);
+                if (accountDto instanceof UserPasswordLessDto) {
+                    emailService.sendTicketEmail(((UserPasswordLessDto) accountDto).getEmail(), ticketDto, ticketPath);
+                    couponService.deleteAllByUserIdAndIsUsed(accountDto.getId());
+                } else if (accountDto instanceof CashierPasswordLessDto) {
+                    // TODO STAMPO IL BIGLIETTO
+                }
             }
-            couponService.deleteAllByUserIdAndIsUsed(accountDto.getId());
             return ResponseEntity.ok("Booking confirmed successfully");
         } else {
             throw new ForbiddenException();
@@ -152,26 +165,31 @@ public class BookingController {
             @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
             @RequestBody BookingDto[] bookings) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
-        if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
+        if (accountDto != null && (accountDto instanceof UserPasswordLessDto || accountDto instanceof CashierPasswordLessDto)) {
             for (BookingDto dto : bookings) {
-
                 BookingDto booking = bookingService.findById(dto.getId()).orElseThrow(() -> new BookingNotFoundException());
-                if (booking.getUser().getId() != accountDto.getId()) {
+
+                // se provo a disdire online ma non trovo la prenotazione
+                if (accountDto instanceof UserPasswordLessDto && booking.getUser().getId() != accountDto.getId()) {
                     throw new BookingNotFoundException();
                 }
                 bookingService.delete(booking);
                 TicketDto ticket = ticketService.findByBookingId(dto.getId()).orElseThrow(() -> new BookingNotFoundException());
                 ticketService.delete(ticket);
 
-                CouponDto coupon = new CouponDto();
-                coupon.setUser((UserPasswordLessDto) accountDto);
-                coupon.setUsed(false);
-                coupon.setValue(booking.getPrice());
-                coupon.setCode(couponService.generateCouponCode());
-                couponService.save(coupon);
-
-                // TODO inviare un messaggio più bello, con i dettagli del coupon
-                emailService.sendCouponEmail(((UserPasswordLessDto) accountDto).getEmail(), booking.getId(), coupon);
+                if (accountDto instanceof CashierPasswordLessDto) {
+                    System.out.println("Tieni i soldi");
+                    // TODO restituisco i soldi al cliente a mano
+                } else if (accountDto instanceof UserPasswordLessDto) {
+                    CouponDto coupon = new CouponDto();
+                    coupon.setUser((UserPasswordLessDto) accountDto);
+                    coupon.setUsed(false);
+                    coupon.setValue(booking.getPrice());
+                    coupon.setCode(couponService.generateCouponCode());
+                    couponService.save(coupon);
+                    // TODO inviare un messaggio più bello, con i dettagli del coupon
+                    emailService.sendCouponEmail(((UserPasswordLessDto) accountDto).getEmail(), booking.getId(), coupon);
+                }
             }
             return ResponseEntity.ok("Booking deleted successfully");
         } else {
