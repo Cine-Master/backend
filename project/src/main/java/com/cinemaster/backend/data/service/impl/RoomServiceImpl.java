@@ -1,9 +1,11 @@
 package com.cinemaster.backend.data.service.impl;
 
 import com.cinemaster.backend.core.exception.BookingsPresentException;
+import com.cinemaster.backend.core.exception.EventsPresentException;
 import com.cinemaster.backend.core.exception.RoomAlreadyPresentException;
 import com.cinemaster.backend.core.exception.RoomNotFoundException;
 import com.cinemaster.backend.data.dao.BookingDao;
+import com.cinemaster.backend.data.dao.EventDao;
 import com.cinemaster.backend.data.dao.RoomDao;
 import com.cinemaster.backend.data.dao.SeatDao;
 import com.cinemaster.backend.data.dto.RoomDto;
@@ -35,6 +37,9 @@ public class RoomServiceImpl implements RoomService {
     private BookingDao bookingDao;
 
     @Autowired
+    private EventDao eventDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -60,7 +65,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public void update(RoomDto roomDto) {
         Room room = roomDao.findById(roomDto.getId()).orElseThrow(() -> new RoomNotFoundException());
-        if (!(bookingDao.findAllByEventRoomIdAndEventDateAfterOrEventRoomIdAndEventDateAndEventStartTimeAfter(room.getId(), LocalDate.now(), room.getId(), LocalDate.now(), LocalTime.now()).isEmpty())) {
+        if (!(bookingDao.findAllByEventRoomId(room.getId()).isEmpty())) {
             throw new BookingsPresentException();
         }
         for (Seat original : room.getSeats()) {
@@ -91,8 +96,8 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public void delete(RoomDto roomDto) {
         Room room = roomDao.findById(roomDto.getId()).orElseThrow(() -> new RoomNotFoundException());
-        if (!(bookingDao.findAllByEventRoomIdAndEventDateAfterOrEventRoomIdAndEventDateAndEventStartTimeAfter(room.getId(), LocalDate.now(), room.getId(), LocalDate.now(), LocalTime.now()).isEmpty())) {
-            throw new BookingsPresentException();
+        if (!(eventDao.findAllByRoomIdAndDateAfter(room.getId(), LocalDate.now()).isEmpty())) {
+            throw new EventsPresentException();
         }
         for (Seat seat : room.getSeats()) {
             seatDao.delete(seat);

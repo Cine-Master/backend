@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface BookingDao extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Event> {
@@ -21,7 +20,7 @@ public interface BookingDao extends JpaRepository<Booking, Long>, JpaSpecificati
 
     List<Booking> findAllByUserId(Long id);
 
-    List<Booking> findAllByEventRoomIdAndEventDateAfterOrEventRoomIdAndEventDateAndEventStartTimeAfter(Long id, LocalDate date, Long id2, LocalDate today, LocalTime time);
+    List<Booking> findAllByEventRoomId(Long id);
 
     List<Booking> findAllByEventDateBefore(LocalDate date);
 

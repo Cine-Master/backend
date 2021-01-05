@@ -21,4 +21,6 @@ public interface EventService {
 
     List<EventDto> findAllByShowId(Long id);
 
+    void deleteOld();
+
 }

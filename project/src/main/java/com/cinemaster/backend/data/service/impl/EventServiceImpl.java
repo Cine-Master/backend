@@ -6,6 +6,7 @@ import com.cinemaster.backend.data.dao.EventDao;
 import com.cinemaster.backend.data.dao.RoomDao;
 import com.cinemaster.backend.data.dao.ShowDao;
 import com.cinemaster.backend.data.dto.EventDto;
+import com.cinemaster.backend.data.entity.Booking;
 import com.cinemaster.backend.data.entity.Event;
 import com.cinemaster.backend.data.entity.Room;
 import com.cinemaster.backend.data.service.EventService;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -121,5 +123,18 @@ public class EventServiceImpl implements EventService {
             throw new ShowNotFoundException();
         }
         return eventDao.findAllByShowId(id).stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteOld() {
+        for (Event event : eventDao.findAllByDateBefore(LocalDate.now())) {
+            if (event.getEndTime().isBefore(LocalTime.now())) {
+                for (Booking booking : bookingDao.findAllByEventId(event.getId())) {
+                    bookingDao.delete(booking);
+                }
+                eventDao.delete(event);
+            }
+        }
     }
 }
