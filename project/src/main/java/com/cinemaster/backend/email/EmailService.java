@@ -9,6 +9,7 @@ public interface EmailService {
 
     String EMAIL_ADDRESS = "cinemaster.ricca@gmail.com";
     String PATH_TO_BOOKING_CONFIRMED_TEMPLATE = "project" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "BookingConfirmed.html";
+    String PATH_TO_BOOKING_DELETED_TEMPLATE = "project" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "BookingDeleted.html";
 
     void sendTicketEmail(String to, TicketDto ticketDto, String pathToAttachment);
 

@@ -8,7 +8,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -78,13 +77,40 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendCouponEmail(String to, Long bookingId, CouponDto coupon) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(EMAIL_ADDRESS);
-        message.setTo(to);
-        String subject = String.format("Prenotazione #%d eliminata", bookingId);
-        String text = String.format("La prenotazione #%d è stata eliminata con successo.\nQuesto è il codice del coupon dal valore di €%.2f:\n%s", bookingId, coupon.getValue(), coupon.getCode());
-        message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
+        try {
+            byte[] encoded = Files.readAllBytes(Paths.get(PATH_TO_BOOKING_DELETED_TEMPLATE));
+            String text = new String(encoded, StandardCharsets.UTF_8);
+
+            Document document = Jsoup.parse(text);
+
+            Element bookingConfirmed = document.getElementById("booking-deleted");
+            bookingConfirmed.appendText(String.format("Prenotazione #%d cancellata", bookingId));
+
+            Element intro = document.getElementById("intro");
+            intro.prepend(String.format("Gentile %s,<br>" +
+                    "Con la presente la vogliamo informare della cancellazione della prenotazione del biglietto:<br><br>", coupon.getUser().getFirstName(), coupon.getUser().getLastName()));
+
+            Element details = document.getElementById("table");
+            details.append("<tr align=\"center\" bgcolor=\"#ffffff\" style=\"color: black; font-family: Bahnschrift, sans-serif; font-size: 24px\">" +
+                    "<td>" + coupon.getCode() + "</td>" +
+                    "</tr>");
+            details.append("<tr align=\"center\" bgcolor=\"#ffffff\" style=\"color: black; font-family: Bahnschrift, sans-serif; font-size: 16px\">" +
+                    "<td>" + String.format("Valore: €%.2f", coupon.getValue()) + "</td>" +
+                    "</tr>");
+
+            MimeMessage message = emailSender.createMimeMessage();
+
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(EMAIL_ADDRESS);
+            helper.setTo(to);
+            String subject = String.format("Prenotazione #%d cancellata", bookingId);
+            helper.setSubject(subject);
+            helper.setText(document.toString(), true);
+
+            emailSender.send(message);
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
