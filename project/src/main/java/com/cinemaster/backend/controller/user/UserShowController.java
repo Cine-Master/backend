@@ -2,6 +2,7 @@ package com.cinemaster.backend.controller.user;
 
 import com.cinemaster.backend.core.exception.ShowNotFoundException;
 import com.cinemaster.backend.data.dto.ShowDto;
+import com.cinemaster.backend.data.service.CategoryService;
 import com.cinemaster.backend.data.service.ShowService;
 import com.cinemaster.backend.data.specification.ShowSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class UserShowController {
 
     @Autowired
     private ShowService showService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("")
     public ResponseEntity showList() {
@@ -48,6 +52,11 @@ public class UserShowController {
     @GetMapping("/next-week")
     public ResponseEntity nextShowList() {
         return ResponseEntity.ok(showService.findAllByEventBeforeNextWeek());
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity categoryList() {
+        return ResponseEntity.ok(categoryService.findAll());
     }
 
 }

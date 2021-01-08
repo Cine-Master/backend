@@ -52,6 +52,16 @@ public class Show {
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
+    @Column(name = "url_highlighted")
+    private String urlHighlighted;
+
+    @Column(name = "url_trailer")
+    private String urlTrailer;
+
+    @Column(name = "rating")
+    @Enumerated(value = EnumType.STRING)
+    private Rating rating;
+
     @OneToMany(mappedBy = "show", fetch = FetchType.EAGER)
     private List<Event> events;
 
@@ -190,4 +200,30 @@ public class Show {
     public void setActors(List<Actor> actors) {
         this.actors = actors;
     }
+
+    public String getUrlHighlighted() {
+        return urlHighlighted;
+    }
+
+    public void setUrlHighlighted(String urlHighlighted) {
+        this.urlHighlighted = urlHighlighted;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    public String getUrlTrailer() {
+        return urlTrailer;
+    }
+
+    public void setUrlTrailer(String urlTrailer) {
+        this.urlTrailer = urlTrailer;
+    }
+
+    public enum Rating {PT, BA, VM14, VM18}
 }

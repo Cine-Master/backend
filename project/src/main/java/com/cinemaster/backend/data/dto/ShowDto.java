@@ -1,5 +1,7 @@
 package com.cinemaster.backend.data.dto;
 
+import com.cinemaster.backend.data.entity.Show;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,6 +26,12 @@ public class ShowDto {
     private Long length;
 
     private LocalDate releaseDate;
+
+    private String urlHighlighted;
+
+    private String urlTrailer;
+
+    private Show.Rating rating;
 
     private List<CategoryDto> categories;
 
@@ -133,5 +141,29 @@ public class ShowDto {
 
     public void setActors(List<ActorDto> actors) {
         this.actors = actors;
+    }
+
+    public String getUrlHighlighted() {
+        return urlHighlighted;
+    }
+
+    public void setUrlHighlighted(String urlHighlighted) {
+        this.urlHighlighted = urlHighlighted;
+    }
+
+    public Show.Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Show.Rating rating) {
+        this.rating = rating;
+    }
+
+    public String getUrlTrailer() {
+        return urlTrailer;
+    }
+
+    public void setUrlTrailer(String urlTrailer) {
+        this.urlTrailer = urlTrailer;
     }
 }
