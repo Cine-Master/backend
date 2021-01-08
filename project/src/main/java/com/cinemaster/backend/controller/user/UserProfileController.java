@@ -64,11 +64,27 @@ public class UserProfileController {
     @PostMapping("/update")
     public ResponseEntity update(
             @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
+            @RequestBody UserPasswordLessDto userDto) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
+            accountService.update(userDto);
+            UserPasswordLessDto userPasswordLessDto = modelMapper.map(userDto, UserPasswordLessDto.class);
+            CookieMap.getInstance().getMap().remove(sessionId);
+            CookieMap.getInstance().getMap().put(sessionId, userPasswordLessDto);
+            return ResponseEntity.ok(userPasswordLessDto);
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity changePassword(
+            @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
             @RequestBody UserDto userDto) {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
-            userDto.setHashedPassword(DigestUtils.sha256Hex(userDto.getHashedPassword()));
-            accountService.update(userDto);
+            String hashedPassword = DigestUtils.sha256Hex(userDto.getHashedPassword());
+            accountService.changePassword(userDto.getId(), hashedPassword);
             UserPasswordLessDto userPasswordLessDto = modelMapper.map(userDto, UserPasswordLessDto.class);
             CookieMap.getInstance().getMap().remove(sessionId);
             CookieMap.getInstance().getMap().put(sessionId, userPasswordLessDto);

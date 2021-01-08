@@ -2,6 +2,7 @@ package com.cinemaster.backend.data.service.impl;
 
 import com.cinemaster.backend.core.exception.EmailAlreadyPresentException;
 import com.cinemaster.backend.core.exception.InvalidDataException;
+import com.cinemaster.backend.core.exception.UserNotFoundException;
 import com.cinemaster.backend.core.exception.UsernameAlreadyPresentException;
 import com.cinemaster.backend.data.dao.AccountDao;
 import com.cinemaster.backend.data.dao.UserDao;
@@ -71,9 +72,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void update(AccountDto accountDto) {
-        if (accountDto instanceof UserDto) {
+    public void update(AccountPasswordLessDto accountDto) {
+        if (accountDto instanceof UserPasswordLessDto) {
             User user = modelMapper.map(accountDto, User.class);
+            String originalPassword = accountDao.findById(accountDto.getId()).get().getHashedPassword();
+            user.setHashedPassword(originalPassword);
             if (accountDao.findByUsernameAndIdNot(user.getUsername(), user.getId()).isPresent()) {
                 throw new UsernameAlreadyPresentException();
             }
@@ -84,5 +87,13 @@ public class AccountServiceImpl implements AccountService {
         } else {
             throw new InvalidDataException();
         }
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(Long accountId, String hashedPassword) {
+        Account account = accountDao.findById(accountId).orElseThrow(() -> new UserNotFoundException());
+        account.setHashedPassword(hashedPassword);
+        accountDao.saveAndFlush(account);
     }
 }

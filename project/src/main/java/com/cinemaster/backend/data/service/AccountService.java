@@ -11,6 +11,7 @@ public interface AccountService {
 
     void save(AccountDto accountDto);
 
-    void update(AccountDto accountDto);
+    void update(AccountPasswordLessDto accountDto);
 
+    void changePassword(Long accountId, String hashedPassword);
 }
