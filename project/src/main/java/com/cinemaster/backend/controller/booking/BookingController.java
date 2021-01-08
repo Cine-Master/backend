@@ -8,9 +8,15 @@ import com.cinemaster.backend.email.EmailService;
 import com.cinemaster.backend.pdf.PdfService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,4 +203,29 @@ public class BookingController {
         }
     }
 
+    @GetMapping("/ticket")
+    public ResponseEntity pdf(
+            @CookieValue(value = "sessionid", defaultValue = "") String sessionId,
+            @RequestParam(name = "id", required = true) Long bookingId) {
+        AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
+        if (accountDto instanceof CashierPasswordLessDto) {
+            String path = "project" + File.separator + "tickets" + File.separator + bookingId + ".pdf";
+            File file = new File(path);
+            byte[] contents = new byte[0];
+            try {
+                contents = Files.readAllBytes(file.toPath());
+            } catch (IOException e) {
+                throw new BookingNotFoundException();
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData(String.format("Ticket-%d.pdf", bookingId), String.format("Ticket-%d.pdf", bookingId));
+            headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
+            return response;
+        } else {
+            throw new ForbiddenException();
+        }
+    }
 }
