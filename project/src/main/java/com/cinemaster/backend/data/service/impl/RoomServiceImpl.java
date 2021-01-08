@@ -55,6 +55,7 @@ public class RoomServiceImpl implements RoomService {
                 Seat seat = modelMapper.map(seatDto, Seat.class);
                 seat.setRoom(room);
                 seatDao.save(seat);
+                seatDto.setId(seat.getId());
             }
         } else {
             throw new RoomAlreadyPresentException();
@@ -68,16 +69,18 @@ public class RoomServiceImpl implements RoomService {
         if (!(bookingDao.findAllByEventRoomId(room.getId()).isEmpty())) {
             throw new BookingsPresentException();
         }
+        for (SeatDto seatDto : roomDto.getSeats()) {
+            if (seatDto.getId() == null) {
+                Seat seat = modelMapper.map(seatDto, Seat.class);
+                seat.setRoom(room);
+                seatDao.saveAndFlush(seat);
+                seatDto.setId(seat.getId());
+            }
+        }
         for (Seat original : room.getSeats()) {
             boolean toDelete = true;
             for (SeatDto seatDto : roomDto.getSeats()) {
-                if (seatDto.getId() == null) {
-                    Seat seat = modelMapper.map(seatDto, Seat.class);
-                    seat.setRoom(room);
-                    seatDao.saveAndFlush(seat);
-                    toDelete = false;
-                    break;
-                } else if (original.getId().equals(seatDto.getId())) {
+                if (original.getId().equals(seatDto.getId())) {
                     Seat seat = modelMapper.map(seatDto, Seat.class);
                     seat.setRoom(room);
                     seatDao.saveAndFlush(seat);
