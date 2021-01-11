@@ -176,7 +176,7 @@ public class BookingController {
                 BookingDto booking = bookingService.findById(dto.getId()).orElseThrow(() -> new BookingNotFoundException());
 
                 // se provo a disdire online ma non trovo la prenotazione
-                if (accountDto instanceof UserPasswordLessDto && booking.getUser().getId().equals(accountDto.getId())) {
+                if (accountDto instanceof UserPasswordLessDto && !(booking.getUser().getId().equals(accountDto.getId()))) {
                     throw new BookingNotFoundException();
                 }
                 bookingService.delete(booking);
