@@ -92,8 +92,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void changePassword(Long accountId, String hashedPassword) {
-        Account account = accountDao.findById(accountId).orElseThrow(() -> new UserNotFoundException());
-        account.setHashedPassword(hashedPassword);
-        accountDao.saveAndFlush(account);
+        User user = (User) accountDao.findById(accountId).orElseThrow(() -> new UserNotFoundException());
+        user.setHashedPassword(hashedPassword);
+        accountDao.saveAndFlush(user);
     }
 }
