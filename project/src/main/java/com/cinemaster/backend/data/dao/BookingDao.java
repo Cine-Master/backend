@@ -18,7 +18,7 @@ public interface BookingDao extends JpaRepository<Booking, Long>, JpaSpecificati
 
     List<Booking> findAllByEventId(Long id);
 
-    List<Booking> findAllByUserIdAndPayed(Long id);
+    List<Booking> findAllByUserIdAndPayed(Long id, Boolean payed);
 
     List<Booking> findAllByEventRoomId(Long id);
 
