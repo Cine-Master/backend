@@ -84,8 +84,7 @@ public class UserProfileController {
         AccountPasswordLessDto accountDto = CookieMap.getInstance().getMap().get(sessionId);
         if (accountDto != null && accountDto instanceof UserPasswordLessDto) {
             String hashedPassword = DigestUtils.sha256Hex(userDto.getHashedPassword());
-            accountService.changePassword(userDto.getId(), hashedPassword);
-            UserPasswordLessDto userPasswordLessDto = modelMapper.map(userDto, UserPasswordLessDto.class);
+            UserPasswordLessDto userPasswordLessDto = (UserPasswordLessDto) accountService.changePassword(userDto.getId(), hashedPassword);
             CookieMap.getInstance().getMap().remove(sessionId);
             CookieMap.getInstance().getMap().put(sessionId, userPasswordLessDto);
             return ResponseEntity.ok(userPasswordLessDto);
