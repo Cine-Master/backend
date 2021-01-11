@@ -23,4 +23,6 @@ public interface EventService {
 
     void deleteOld();
 
+    List<EventDto> findAllByToday();
+
 }

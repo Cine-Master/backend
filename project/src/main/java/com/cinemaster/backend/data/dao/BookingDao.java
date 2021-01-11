@@ -24,4 +24,5 @@ public interface BookingDao extends JpaRepository<Booking, Long>, JpaSpecificati
 
     List<Booking> findAllByEventDateBefore(LocalDate date);
 
+    List<Booking> findAllByUserIdIsNull();
 }

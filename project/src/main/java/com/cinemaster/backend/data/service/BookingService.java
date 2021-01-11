@@ -26,4 +26,6 @@ public interface BookingService {
 
     List<BookingDto> findAllByEventId(Long id);
 
+    List<BookingDto> findAllByCashier();
+
 }

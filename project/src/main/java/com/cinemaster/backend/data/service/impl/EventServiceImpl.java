@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.LoggingMXBean;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,5 +136,11 @@ public class EventServiceImpl implements EventService {
                 eventDao.delete(event);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public List<EventDto> findAllByToday() {
+        return eventDao.findAllByDateBefore(LocalDate.now().plusDays(1)).stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
     }
 }

@@ -138,4 +138,9 @@ public class BookingServiceImpl implements BookingService {
         }
         return bookingDao.findAllByEventId(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
     }
+
+    @Override
+    public List<BookingDto> findAllByCashier() {
+        return bookingDao.findAllByUserIdIsNull().stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
+    }
 }
