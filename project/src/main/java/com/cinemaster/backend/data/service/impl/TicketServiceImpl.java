@@ -71,7 +71,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketDto> findAllByUserId(Long id) {
         List<TicketDto> ticketDtos = new ArrayList<>();
-        for (BookingDto booking : bookingDao.findAllByUserId(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList())) {
+        for (BookingDto booking : bookingDao.findAllByUserIdAndPayed(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList())) {
             TicketDto ticketDto = new TicketDto();
             ticketDto.setBookingId(booking.getId());
             ticketDto.setUserName(booking.getUser().getFirstName() + " " + booking.getUser().getLastName());
