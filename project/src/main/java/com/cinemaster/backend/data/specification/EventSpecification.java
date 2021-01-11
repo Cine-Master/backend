@@ -22,8 +22,8 @@ public class EventSpecification {
             startTimePredicate = criteriaBuilder.and(startTimePredicate, criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), startTime));
 
             Predicate endTimePredicate = criteriaBuilder.conjunction();
-            endTimePredicate = criteriaBuilder.and(startTimePredicate, criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), endTime));
-            endTimePredicate = criteriaBuilder.and(startTimePredicate, criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), endTime));
+            endTimePredicate = criteriaBuilder.and(endTimePredicate, criteriaBuilder.lessThanOrEqualTo(root.get("startTime"), endTime));
+            endTimePredicate = criteriaBuilder.and(endTimePredicate, criteriaBuilder.greaterThanOrEqualTo(root.get("endTime"), endTime));
 
             Predicate timePredicate = criteriaBuilder.or(startTimePredicate, endTimePredicate);
             predicate = criteriaBuilder.and(predicate, timePredicate);
