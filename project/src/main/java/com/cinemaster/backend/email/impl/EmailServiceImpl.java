@@ -89,7 +89,7 @@ public class EmailServiceImpl implements EmailService {
             Element intro = document.getElementById("intro");
             intro.prepend(String.format("Gentile %s,<br>" +
                     "Con la presente la vogliamo informare della cancellazione della prenotazione #%d.<br>" +
-                    "Di seguito, può trovare il codice del coupon, che può utilizzare qualora voglia effettuare una nuova prenotazione:<br><br>", coupon.getUser().getFirstName(), coupon.getUser().getLastName(), bookingId));
+                    "Di seguito, può trovare il codice del coupon, che può utilizzare qualora voglia effettuare una nuova prenotazione:<br><br>", coupon.getUser().getFirstName() + " " + coupon.getUser().getLastName(), bookingId));
 
             Element details = document.getElementById("table");
             details.append("<tr align=\"center\" bgcolor=\"#ffffff\" style=\"color: black; font-family: Bahnschrift, sans-serif; font-size: 24px\">" +
