@@ -16,6 +16,4 @@ public interface CategoryService {
     Optional<CategoryDto> findById(Long id);
 
     List<CategoryDto> findAll();
-
-    List<CategoryDto> findAllByNameContains(String name);
 }

@@ -83,9 +83,4 @@ public class ActorServiceImpl implements ActorService {
     public List<ActorDto> findAll() {
         return actorDao.findAll().stream().map(actor -> modelMapper.map(actor, ActorDto.class)).collect(Collectors.toList());
     }
-
-    @Override
-    public List<ActorDto> findAllByNameContains(String name) {
-        return actorDao.findAllByNameContains(name).stream().map(actor -> modelMapper.map(actor, ActorDto.class)).collect(Collectors.toList());
-    }
 }

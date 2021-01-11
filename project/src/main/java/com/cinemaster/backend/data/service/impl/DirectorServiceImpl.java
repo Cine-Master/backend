@@ -83,9 +83,4 @@ public class DirectorServiceImpl implements DirectorService {
     public List<DirectorDto> findAll() {
         return directorDao.findAll().stream().map(director -> modelMapper.map(director, DirectorDto.class)).collect(Collectors.toList());
     }
-
-    @Override
-    public List<DirectorDto> findAllByNameContains(String name) {
-        return directorDao.findAllByNameContains(name).stream().map(director -> modelMapper.map(director, DirectorDto.class)).collect(Collectors.toList());
-    }
 }

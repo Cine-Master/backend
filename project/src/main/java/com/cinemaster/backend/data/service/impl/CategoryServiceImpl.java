@@ -85,9 +85,4 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> findAll() {
         return categoryDao.findAll().stream().map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
     }
-
-    @Override
-    public List<CategoryDto> findAllByNameContains(String name) {
-        return categoryDao.findAllByNameContains(name).stream().map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
-    }
 }

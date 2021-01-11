@@ -17,6 +17,4 @@ public interface ActorService {
     Optional<ActorDto> findById(Long id);
 
     List<ActorDto> findAll();
-
-    List<ActorDto> findAllByNameContains(String name);
 }

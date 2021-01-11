@@ -16,6 +16,4 @@ public interface DirectorService {
     Optional<DirectorDto> findById(Long id);
 
     List<DirectorDto> findAll();
-
-    List<DirectorDto> findAllByNameContains(String name);
 }
