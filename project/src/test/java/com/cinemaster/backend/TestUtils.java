@@ -104,4 +104,13 @@ public abstract class TestUtils {
         cashierDto.setHashedPassword(username);
         return cashierDto;
     }
+
+    public static CouponDto createCouponDto(UserPasswordLessDto userPasswordLessDto, String code) {
+        CouponDto couponDto = new CouponDto();
+        couponDto.setUser(userPasswordLessDto);
+        couponDto.setCode(code);
+        couponDto.setValue(12.0);
+        couponDto.setUsed(false);
+        return couponDto;
+    }
 }
