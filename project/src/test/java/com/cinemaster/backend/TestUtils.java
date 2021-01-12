@@ -113,4 +113,11 @@ public abstract class TestUtils {
         couponDto.setUsed(false);
         return couponDto;
     }
+
+    public static TicketDto createTicketDto(Long bookingId, String barcode) {
+        TicketDto ticketDto = new TicketDto();
+        ticketDto.setBarcode(barcode);
+        ticketDto.setBookingId(bookingId);
+        return ticketDto;
+    }
 }

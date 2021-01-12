@@ -9,6 +9,7 @@ import com.cinemaster.backend.data.service.TicketService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public Optional<TicketDto> findByBookingId(Long id) {
         Optional<Ticket> optional = ticketDao.findByBookingId(id);
         if (optional.isPresent()) {
@@ -60,6 +62,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public Optional<TicketDto> findByBarcode(String barcode) {
         Optional<Ticket> optional = ticketDao.findByBarcode(barcode);
         if (optional.isPresent()) {
@@ -69,6 +72,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public List<TicketDto> findAllByUserId(Long id) {
         List<TicketDto> ticketDtos = new ArrayList<>();
         for (BookingDto booking : bookingDao.findAllByUserIdAndPayed(id, true).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList())) {

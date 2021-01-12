@@ -19,5 +19,5 @@ public interface TicketService {
 
     Optional<TicketDto> findByBarcode(String barcode);
 
-    public List<TicketDto> findAllByUserId(Long id);
+    List<TicketDto> findAllByUserId(Long id);
 }
