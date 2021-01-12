@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
         DirectorServiceTest.class,
         BookingServiceTest.class,
         CouponServiceTest.class,
+        EventServiceTest.class,
 })
 class BackendApplicationTests {
 }
