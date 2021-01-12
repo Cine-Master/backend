@@ -20,11 +20,7 @@ public interface BookingService {
 
     void deleteExpired();
 
-    void deleteOld();
-
     List<SeatDto> findBookedSeatsByEventId(Long id);
-
-    List<BookingDto> findAllByEventId(Long id);
 
     List<BookingDto> findAllByCashier();
 

@@ -108,6 +108,7 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
+    @Transactional
     public List<ShowDto> findAll() {
         return showDao.findAll().stream().map(show -> modelMapper.map(show, ShowDto.class)).collect(Collectors.toList());
     }

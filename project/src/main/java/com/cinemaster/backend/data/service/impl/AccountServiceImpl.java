@@ -65,6 +65,8 @@ public class AccountServiceImpl implements AccountService {
             if (userDao.findByEmail(user.getEmail()).isPresent()) {
                 throw new EmailAlreadyPresentException();
             }
+        } else if (accountDto instanceof CashierDto) {
+            account = modelMapper.map(accountDto, Cashier.class);
         }
         accountDao.save(account);
         accountDto.setId(account.getId());

@@ -103,6 +103,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public List<EventDto> findAll() {
         return eventDao.findAll().stream().map(event -> modelMapper.map(event, EventDto.class)).collect(Collectors.toList());
     }

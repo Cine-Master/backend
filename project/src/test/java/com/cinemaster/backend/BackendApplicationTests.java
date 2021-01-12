@@ -1,11 +1,12 @@
 package com.cinemaster.backend;
 
-import com.cinemaster.backend.service.AccountServiceTest;
-import com.cinemaster.backend.service.ActorServiceTest;
-import com.cinemaster.backend.service.CategoryServiceTest;
-import com.cinemaster.backend.service.DirectorServiceTest;
+import com.cinemaster.backend.data.dto.*;
+import com.cinemaster.backend.data.service.*;
+import com.cinemaster.backend.service.*;
+import org.junit.After;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
         ActorServiceTest.class,
         CategoryServiceTest.class,
         DirectorServiceTest.class,
+        BookingServiceTest.class,
 })
 class BackendApplicationTests {
 }

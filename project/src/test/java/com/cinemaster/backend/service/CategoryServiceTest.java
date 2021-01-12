@@ -5,7 +5,6 @@ import com.cinemaster.backend.data.service.CategoryService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -15,13 +14,7 @@ import java.util.Optional;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class CategoryServiceTest {
-
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    ModelMapper modelMapper;
+public class CategoryServiceTest extends ServiceTest {
 
     @Test
     public void testCategoryService() {

@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +84,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public Optional<BookingDto> findById(Long id) {
         Optional<Booking> optional = bookingDao.findById(id);
         if (optional.isPresent()) {
@@ -95,6 +94,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingDto> findAll() {
         return bookingDao.findAll().stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
     }
@@ -104,16 +104,6 @@ public class BookingServiceImpl implements BookingService {
     public void deleteExpired() {
         for (Booking booking : bookingDao.findAllByExpirationBefore(LocalDateTime.now())) {
             bookingDao.delete(booking);
-        }
-    }
-
-    @Override
-    @Transactional
-    public void deleteOld() {
-        for (Booking booking : bookingDao.findAllByEventDateBefore(LocalDate.now().plusDays(1))) {
-            if (booking.getEvent().getEndTime().isBefore(LocalTime.now())) {
-                bookingDao.delete(booking);
-            }
         }
     }
 
@@ -132,14 +122,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public List<BookingDto> findAllByEventId(Long id) {
-        if (!(eventDao.findById(id).isPresent())) {
-            throw new EventNotFoundException();
-        }
-        return bookingDao.findAllByEventId(id).stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
     public List<BookingDto> findAllByCashier() {
         return bookingDao.findAllByUserIdIsNull().stream().map(booking -> modelMapper.map(booking, BookingDto.class)).collect(Collectors.toList());
     }
