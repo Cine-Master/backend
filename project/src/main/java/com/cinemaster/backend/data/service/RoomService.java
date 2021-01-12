@@ -16,6 +16,4 @@ public interface RoomService {
     Optional<RoomDto> findById(Long id);
 
     List<RoomDto> findAll();
-
-    List<RoomDto> findAllByNameContains(String name);
 }

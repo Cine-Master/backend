@@ -122,9 +122,4 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomDto> findAll() {
         return roomDao.findAll().stream().map(room -> modelMapper.map(room, RoomDto.class)).collect(Collectors.toList());
     }
-
-    @Override
-    public List<RoomDto> findAllByNameContains(String name) {
-        return roomDao.findAllByNameContains(name).stream().map(room -> modelMapper.map(room, RoomDto.class)).collect(Collectors.toList());
-    }
 }
